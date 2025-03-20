@@ -1,0 +1,202 @@
+/* src/app/modules/admin/logs/logs.component.scss */
+.logs-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logs-header {
+  margin-bottom: 24px;
+  
+  .header-title {
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 8px;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--text-color-secondary);
+    }
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  
+  p {
+    margin-top: 16px;
+    color: var(--text-color-secondary);
+    font-size: 1.1rem;
+  }
+}
+
+.logs-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.filter-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--glow-effect);
+  
+  &:hover {
+    box-shadow: var(--hover-glow);
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.search-row {
+  .search-field {
+    width: 100%;
+  }
+}
+
+.logs-table-container {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--glow-effect);
+  overflow: hidden;
+  
+  &:hover {
+    box-shadow: var(--hover-glow);
+  }
+}
+
+.logs-table {
+  width: 100%;
+  
+  th {
+    color: var(--text-color);
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  td {
+    padding: 12px 16px;
+    color: var(--text-color-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  tr:hover {
+    background-color: var(--translucent-bg);
+  }
+  
+  .mat-column-actionDate {
+    width: 180px;
+  }
+  
+  .mat-column-actionType {
+    width: 200px;
+  }
+  
+  /* Styles for action types */
+  .action-type-create_admin {
+    color: #4CAF50;
+    font-weight: 500;
+  }
+  
+  .action-type-update_admin_level {
+    color: #2196F3;
+    font-weight: 500;
+  }
+  
+  .action-type-remove_admin {
+    color: #F44336;
+    font-weight: 500;
+  }
+  
+  .action-type-disable_user {
+    color: #FF9800;
+    font-weight: 500;
+  }
+  
+  .action-type-enable_user {
+    color: #4CAF50;
+    font-weight: 500;
+  }
+  
+  .action-type-update_colis_status {
+    color: #9C27B0;
+    font-weight: 500;
+  }
+  
+  .action-type-update_payment_status {
+    color: #00BCD4;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+  .logs-container {
+    padding: 16px;
+  }
+  
+  .logs-header {
+    .header-title {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  .filter-row {
+    flex-direction: column;
+    
+    mat-form-field {
+      width: 100%;
+    }
+    
+    button {
+      align-self: flex-end;
+    }
+  }
+  
+  .logs-table {
+    td, th {
+      padding: 8px;
+    }
+    
+    .mat-column-actionDate {
+      width: 120px;
+    }
+  }
+}

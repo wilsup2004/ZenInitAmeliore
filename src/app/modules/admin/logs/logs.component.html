@@ -1,0 +1,113 @@
+<!-- src/app/modules/admin/logs/logs.component.html -->
+<div class="logs-container">
+  <header class="logs-header">
+    <div class="header-title">
+      <h1>Journaux d'activité administrateur</h1>
+      <p>Consultez les actions effectuées par les administrateurs de la plateforme</p>
+    </div>
+  </header>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des journaux d'activité...</p>
+  </div>
+  
+  <!-- Content -->
+  <div *ngIf="!loading" class="logs-content">
+    <!-- Filters -->
+    <mat-card class="filter-card">
+      <mat-card-content>
+        <form [formGroup]="filterForm" class="filter-form">
+          <div class="filter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Type d'action</mat-label>
+              <mat-select formControlName="actionType">
+                <mat-option *ngFor="let type of actionTypes" [value]="type.value">
+                  {{ type.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Date de début</mat-label>
+              <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Date de fin</mat-label>
+              <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>ID Administrateur</mat-label>
+              <input matInput formControlName="adminId" type="number">
+            </mat-form-field>
+            
+            <button mat-icon-button color="warn" (click)="resetFilters()" matTooltip="Réinitialiser les filtres">
+              <mat-icon>filter_alt_off</mat-icon>
+            </button>
+          </div>
+          
+          <div class="search-row">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Rechercher</mat-label>
+              <input matInput (keyup)="applyTextFilter($event)" placeholder="Rechercher dans les journaux...">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    
+    <!-- Logs table -->
+    <div class="logs-table-container">
+      <table mat-table [dataSource]="dataSource" matSort class="logs-table">
+        <!-- Date Column -->
+        <ng-container matColumnDef="actionDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <td mat-cell *matCellDef="let log"> {{ formatDate(log.actionDate) }} </td>
+        </ng-container>
+        
+        <!-- Admin Column -->
+        <ng-container matColumnDef="adminUser.user.nom">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Administrateur </th>
+          <td mat-cell *matCellDef="let log"> {{ log.adminUser.user.prenom }} {{ log.adminUser.user.nom }} </td>
+        </ng-container>
+        
+        <!-- Action Type Column -->
+        <ng-container matColumnDef="actionType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Type d'action </th>
+          <td mat-cell *matCellDef="let log">
+            <span [ngClass]="'action-type-' + log.actionType.toLowerCase()">{{ log.actionType }}</span>
+          </td>
+        </ng-container>
+        
+        <!-- Action Details Column -->
+        <ng-container matColumnDef="actionDetails">
+          <th mat-header-cell *matHeaderCellDef> Détails </th>
+          <td mat-cell *matCellDef="let log"> {{ log.actionDetails }} </td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Aucune donnée ne correspond aux critères de recherche</td>
+        </tr>
+      </table>
+      
+      <mat-paginator 
+        [pageSizeOptions]="[10, 20, 50, 100]"
+        [pageSize]="20"
+        showFirstLastButtons
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>
