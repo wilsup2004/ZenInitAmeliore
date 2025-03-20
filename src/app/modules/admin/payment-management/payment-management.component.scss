@@ -1,0 +1,251 @@
+/* src/app/modules/admin/payment-management/payment-management.component.scss */
+.payment-management-container {
+  padding: 24px;
+}
+
+.payment-management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  .header-title {
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 8px;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--text-color-secondary);
+    }
+  }
+  
+  .header-actions {
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--glow-effect);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--hover-glow);
+  }
+  
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+  }
+  
+  .stat-label {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+  }
+  
+  &.amount-card {
+    background-color: var(--primary-color);
+    
+    .stat-value {
+      color: white;
+    }
+    
+    .stat-label {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+.filter-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: var(--glow-effect);
+  
+  mat-card-content {
+    padding: 16px;
+  }
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  .search-field {
+    flex: 1;
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  
+  p {
+    margin-top: 16px;
+    color: var(--text-color-secondary);
+  }
+}
+
+.table-container {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--glow-effect);
+}
+
+table {
+  width: 100%;
+}
+
+.payment-row {
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--translucent-bg);
+  }
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  
+  &.status-completed {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+  }
+  
+  &.status-pending {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+  }
+  
+  &.status-failed {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+  }
+  
+  &.status-cancelled {
+    background-color: rgba(158, 158, 158, 0.1);
+    color: #9e9e9e;
+  }
+  
+  &.status-refunded {
+    background-color: rgba(156, 39, 176, 0.1);
+    color: #9c27b0;
+  }
+}
+
+/* Media queries pour la responsivité */
+@media (max-width: 991px) {
+  .stats-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .amount-card {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-management-container {
+    padding: 16px;
+  }
+  
+  .payment-management-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    
+    .header-title {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+    }
+    
+    .header-actions {
+      width: 100%;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .amount-card {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .amount-card {
+    grid-column: span 1;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  table {
+    min-width: 800px;
+  }
+}

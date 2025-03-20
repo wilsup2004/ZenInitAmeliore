@@ -37,6 +37,35 @@
   }
 }
 
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #f44336;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 24px;
+  }
+  
+  button {
+    margin: 0 8px;
+  }
+}
+
 .payment-grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -48,6 +77,11 @@ mat-card {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   box-shadow: var(--glow-effect);
+  transition: box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: var(--hover-glow);
+  }
   
   mat-card-header {
     padding: 16px 16px 0;
@@ -131,6 +165,11 @@ mat-divider {
 
 .payment-method-item {
   cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
   
   .method-info {
     display: flex;
@@ -171,6 +210,42 @@ mat-divider {
   
   mat-form-field {
     flex: 1;
+  }
+}
+
+.card-logos {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  
+  .card-logo {
+    height: 30px;
+    width: auto;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.mobile-money-info, .secure-payment-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: var(--translucent-bg);
+  
+  mat-icon {
+    color: var(--primary-color);
+  }
+  
+  span {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
   }
 }
 
@@ -241,8 +316,28 @@ mat-divider {
     }
   }
   
-  button {
-    min-width: 200px;
+  .success-actions {
+    display: flex;
+    gap: 16px;
+    
+    button {
+      min-width: 200px;
+    }
+  }
+}
+
+/* Media queries pour la responsivité */
+@media (max-width: 991px) {
+  .payment-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .order-summary-card {
+    order: 2;
+  }
+  
+  .payment-method-card {
+    order: 1;
   }
 }
 
@@ -261,12 +356,46 @@ mat-divider {
     }
   }
   
-  .payment-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .form-row {
     flex-direction: column;
     gap: 0;
+  }
+  
+  .success-state {
+    .success-icon {
+      mat-icon {
+        font-size: 56px;
+        width: 56px;
+        height: 56px;
+      }
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    .success-actions {
+      flex-direction: column;
+      width: 100%;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-actions {
+    flex-direction: column;
+    gap: 16px;
+    
+    button {
+      width: 100%;
+    }
+  }
+  
+  .card-logos {
+    justify-content: center;
   }
 }

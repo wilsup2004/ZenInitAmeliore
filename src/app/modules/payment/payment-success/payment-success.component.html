@@ -7,8 +7,19 @@
     <p *ngIf="!loading && processingStatus">Mise à jour du statut du paiement...</p>
   </div>
   
+  <!-- Error state -->
+  <div *ngIf="error" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Une erreur s'est produite</h2>
+    <p>{{ errorMessage }}</p>
+    <div class="error-actions">
+      <button mat-button (click)="backToDashboard()">Retour au tableau de bord</button>
+      <button mat-raised-button color="primary" (click)="retryPayment()">Réessayer le paiement</button>
+    </div>
+  </div>
+  
   <!-- Success state -->
-  <div *ngIf="!loading && !processingStatus" class="success-state">
+  <div *ngIf="!loading && !processingStatus && !error" class="success-state">
     <div class="success-icon">
       <mat-icon>check_circle</mat-icon>
     </div>
@@ -17,32 +28,67 @@
     <p>Votre paiement a été traité avec succès.</p>
     
     <div *ngIf="paymentDetails" class="success-details">
-      <div class="detail-item">
-        <div class="detail-label">ID de transaction :</div>
-        <div class="detail-value">{{ paymentDetails.transactionId }}</div>
+      <div class="receipt-header">
+        <h3>Reçu de paiement</h3>
+        <span>Ref: {{ paymentDetails.transactionId }}</span>
       </div>
       
-      <div class="detail-item">
-        <div class="detail-label">Statut :</div>
-        <div class="detail-value">{{ paymentDetails.status }}</div>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">ID de transaction :</div>
+          <div class="detail-value">{{ paymentDetails.transactionId }}</div>
+        </div>
+        
+        <div class="detail-item">
+          <div class="detail-label">Statut :</div>
+          <div class="detail-value status-completed">{{ paymentDetails.paymentStatus }}</div>
+        </div>
+        
+        <div class="detail-item">
+          <div class="detail-label">Date :</div>
+          <div class="detail-value">{{ paymentDetails.paymentDate | date:'dd/MM/yyyy HH:mm' }}</div>
+        </div>
       </div>
       
-      <div class="detail-item">
-        <div class="detail-label">Montant :</div>
-        <div class="detail-value">{{ paymentDetails.paymentAmount }} €</div>
+      <mat-divider></mat-divider>
+      
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">Colis :</div>
+          <div class="detail-value">Colis #{{ paymentDetails.colis.idColis }}</div>
+        </div>
+        
+        <div class="detail-item">
+          <div class="detail-label">Trajet :</div>
+          <div class="detail-value">{{ paymentDetails.colis.villeDepart }} → {{ paymentDetails.colis.villeArrivee }}</div>
+        </div>
+        
+        <div class="detail-item">
+          <div class="detail-label">Transporteur :</div>
+          <div class="detail-value">{{ paymentDetails.priseEnCharge.users.prenom }} {{ paymentDetails.priseEnCharge.users.nom }}</div>
+        </div>
       </div>
       
-      <div class="detail-item">
-        <div class="detail-label">Date :</div>
-        <div class="detail-value">{{ paymentDetails.paymentDate | date:'dd/MM/yyyy HH:mm' }}</div>
+      <mat-divider></mat-divider>
+      
+      <div class="detail-total">
+        <div class="total-label">Total payé :</div>
+        <div class="total-value">{{ paymentDetails.paymentAmount }} €</div>
       </div>
+    </div>
+    
+    <div class="success-message">
+      <mat-icon>info</mat-icon>
+      <p>Un email de confirmation a été envoyé à l'adresse associée à votre compte.</p>
     </div>
     
     <div class="success-actions">
       <button mat-stroked-button (click)="backToDashboard()">
-        Retour au tableau de bord
+        <mat-icon>dashboard</mat-icon>
+        Tableau de bord
       </button>
       <button mat-raised-button color="primary" (click)="viewColis()">
+        <mat-icon>visibility</mat-icon>
         Voir les détails du colis
       </button>
     </div>

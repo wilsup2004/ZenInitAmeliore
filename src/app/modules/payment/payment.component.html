@@ -11,8 +11,16 @@
     <p>Chargement des informations...</p>
   </div>
   
+  <!-- Error state -->
+  <div *ngIf="error" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ errorMessage }}</p>
+    <button mat-raised-button color="primary" (click)="backToDetails()">Retour</button>
+    <button mat-stroked-button (click)="resetForm()">Réessayer</button>
+  </div>
+  
   <!-- Payment form -->
-  <div *ngIf="!loading && !success" class="payment-content">
+  <div *ngIf="!loading && !error && !success" class="payment-content">
     <div class="payment-grid">
       <!-- Order summary -->
       <mat-card class="order-summary-card">
@@ -87,6 +95,18 @@
               <h3>Détails de carte</h3>
               
               <mat-form-field appearance="outline">
+                <mat-label>Titulaire de la carte</mat-label>
+                <input matInput formControlName="cardName" placeholder="Jean Dupont">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="paymentForm.get('cardName')?.hasError('required')">
+                  Le nom du titulaire est requis
+                </mat-error>
+                <mat-error *ngIf="paymentForm.get('cardName')?.hasError('minlength')">
+                  Veuillez entrer un nom valide
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
                 <mat-label>Numéro de carte</mat-label>
                 <input matInput formControlName="cardNumber" placeholder="1234 5678 9012 3456" maxlength="16">
                 <mat-icon matSuffix>credit_card</mat-icon>
@@ -121,11 +141,17 @@
                   </mat-error>
                 </mat-form-field>
               </div>
+              
+              <div class="card-logos">
+                <img src="assets/images/visa.png" alt="Visa" class="card-logo">
+                <img src="assets/images/mastercard.png" alt="Mastercard" class="card-logo">
+                <img src="assets/images/amex.png" alt="American Express" class="card-logo">
+              </div>
             </div>
             
-            <!-- Orange Money fields -->
-            <div *ngIf="selectedMethod?.methodName === 'Orange Money'" class="mobile-money-details">
-              <h3>Détails Orange Money</h3>
+            <!-- Orange Money / Mobile Money fields -->
+            <div *ngIf="selectedMethod?.methodName === 'Orange Money' || selectedMethod?.methodName === 'Mobile Money'" class="mobile-money-details">
+              <h3>Détails {{ selectedMethod?.methodName }}</h3>
               
               <mat-form-field appearance="outline">
                 <mat-label>Numéro de téléphone</mat-label>
@@ -138,6 +164,16 @@
                   Numéro de téléphone invalide
                 </mat-error>
               </mat-form-field>
+              
+              <div class="mobile-money-info">
+                <mat-icon color="primary">info</mat-icon>
+                <span>Vous recevrez une notification sur votre téléphone pour confirmer le paiement</span>
+              </div>
+            </div>
+            
+            <div class="secure-payment-info">
+              <mat-icon>lock</mat-icon>
+              <span>Paiement sécurisé. Vos données de paiement sont chiffrées.</span>
             </div>
             
             <div class="payment-actions">
@@ -147,7 +183,7 @@
                 mat-raised-button 
                 color="primary" 
                 [disabled]="paymentForm.invalid || processing">
-                <span *ngIf="!processing">Payer maintenant</span>
+                <span *ngIf="!processing">Payer {{ colis?.tarif || '' }} €</span>
                 <mat-spinner *ngIf="processing" diameter="24"></mat-spinner>
               </button>
             </div>
@@ -171,8 +207,11 @@
       <p>Montant : {{ colis.tarif }} €</p>
     </div>
     
-    <button mat-raised-button color="primary" (click)="backToDetails()">
-      Retour aux détails du colis
-    </button>
+    <div class="success-actions">
+      <button mat-button (click)="backToDetails()">Retour aux détails du colis</button>
+      <button mat-raised-button color="primary" routerLink="/dashboard">
+        Aller au tableau de bord
+      </button>
+    </div>
   </div>
 </div>

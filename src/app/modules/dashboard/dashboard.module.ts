@@ -19,8 +19,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { SharedModule } from '../../shared/shared.module';
+
+// NgxCharts
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,9 @@ import { SharedModule } from '../../shared/shared.module';
     MatChipsModule,
     MatBadgeModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatMenuModule,
+    NgxChartsModule,
     SharedModule
   ]
 })

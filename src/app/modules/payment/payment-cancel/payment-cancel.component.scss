@@ -19,6 +19,40 @@
   }
 }
 
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 0;
+  
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #f44336;
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 24px;
+  }
+  
+  .error-actions {
+    display: flex;
+    gap: 16px;
+  }
+}
+
 .cancel-state {
   display: flex;
   flex-direction: column;
@@ -34,6 +68,7 @@
       width: 72px;
       height: 72px;
       color: #F44336;
+      animation: fadeIn 0.5s ease-in-out;
     }
   }
   
@@ -48,6 +83,30 @@
     font-size: 1.1rem;
     color: var(--text-color-secondary);
     margin-bottom: 24px;
+    max-width: 90%;
+  }
+}
+
+.cancel-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--translucent-bg);
+  max-width: 100%;
+  
+  mat-icon {
+    color: var(--primary-color);
+    flex-shrink: 0;
+  }
+  
+  span {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    text-align: left;
   }
 }
 
@@ -56,10 +115,26 @@
   gap: 16px;
   
   button {
-    min-width: 200px;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Media queries pour la responsivité */
 @media (max-width: 768px) {
   .payment-cancel-container {
     padding: 16px;
@@ -67,6 +142,8 @@
   
   .cancel-state {
     .cancel-icon {
+      margin-bottom: 16px;
+      
       mat-icon {
         font-size: 56px;
         width: 56px;
@@ -83,12 +160,23 @@
     }
   }
   
-  .cancel-actions {
+  .error-actions, .cancel-actions {
     flex-direction: column;
     width: 100%;
     
     button {
       width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .cancel-info {
+    flex-direction: column;
+    text-align: center;
+    
+    span {
+      text-align: center;
     }
   }
 }

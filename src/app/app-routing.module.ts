@@ -7,49 +7,7 @@ import { AdminGuard } from './core/guards/admin.guard';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./modules/layout/layout.module').then(m => m.LayoutModule),
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'dashboard'
-      },
-      {
-        path: 'dashboard',
-        loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'profile',
-        loadChildren: () => import('./modules/user/profile/profile.module').then(m => m.ProfileModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'colis',
-        loadChildren: () => import('./modules/colis/colis.module').then(m => m.ColisModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'trajet',
-        loadChildren: () => import('./modules/trajet/trajet.module').then(m => m.TrajetModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'messaging',
-        loadChildren: () => import('./modules/messaging/messaging.module').then(m => m.MessagingModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'payment',
-        loadChildren: () => import('./modules/payment/payment.module').then(m => m.PaymentModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'admin',
-        loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
-        canActivate: [AdminGuard]
-      }
-    ]
+    loadChildren: () => import('./modules/layout/layout.module').then(m => m.LayoutModule)
   },
   {
     path: 'auth',

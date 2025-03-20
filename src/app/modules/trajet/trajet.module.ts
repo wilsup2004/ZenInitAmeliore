@@ -9,6 +9,7 @@ import { TrajetListComponent } from './trajet-list/trajet-list.component';
 import { TrajetCreateComponent } from './trajet-create/trajet-create.component';
 import { TrajetDetailComponent } from './trajet-detail/trajet-detail.component';
 import { TrajetFilterComponent } from './components/trajet-filter/trajet-filter.component';
+import { TrajetSortComponent } from './components/trajet-sort/trajet-sort.component';
 import { TrajetItemComponent } from './components/trajet-item/trajet-item.component';
 import { VolSearchComponent } from './components/vol-search/vol-search.component';
 
@@ -33,6 +34,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
@@ -41,6 +45,7 @@ import { SharedModule } from '../../shared/shared.module';
     TrajetCreateComponent,
     TrajetDetailComponent,
     TrajetFilterComponent,
+    TrajetSortComponent,
     TrajetItemComponent,
     VolSearchComponent
   ],
@@ -69,6 +74,9 @@ import { SharedModule } from '../../shared/shared.module';
     MatSnackBarModule,
     MatRadioModule,
     MatTableModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatButtonToggleModule,
     SharedModule
   ]
 })

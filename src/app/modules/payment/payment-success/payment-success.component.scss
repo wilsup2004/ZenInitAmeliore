@@ -19,15 +19,50 @@
   }
 }
 
-.success-state {
+.error-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 48px 0;
   
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #f44336;
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 24px;
+  }
+  
+  .error-actions {
+    display: flex;
+    gap: 16px;
+  }
+}
+
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 0;
+  
   .success-icon {
     margin-bottom: 24px;
+    animation: pulse 2s ease-in-out;
     
     mat-icon {
       font-size: 72px;
@@ -52,31 +87,106 @@
 }
 
 .success-details {
-  background-color: var(--translucent-bg);
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 16px;
+  box-shadow: var(--glow-effect);
+  padding: 0;
   margin-bottom: 24px;
   width: 100%;
   text-align: left;
+  overflow: hidden;
+  
+  .receipt-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    
+    span {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+  }
+  
+  .detail-section {
+    padding: 16px;
+  }
+  
+  .detail-item {
+    display: flex;
+    margin-bottom: 12px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .detail-label {
+      width: 140px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    .detail-value {
+      flex: 1;
+      color: var(--text-color-secondary);
+      
+      &.status-completed {
+        color: #4CAF50;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .detail-total {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--translucent-bg);
+    
+    .total-label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-color);
+    }
+    
+    .total-value {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+    }
+  }
 }
 
-.detail-item {
+.success-message {
   display: flex;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--translucent-bg);
+  max-width: 100%;
   
-  &:last-child {
-    margin-bottom: 0;
+  mat-icon {
+    color: var(--primary-color);
+    flex-shrink: 0;
   }
   
-  .detail-label {
-    width: 150px;
-    font-weight: 500;
-    color: var(--text-color);
-  }
-  
-  .detail-value {
-    flex: 1;
+  p {
+    margin: 0;
+    font-size: 0.9rem;
     color: var(--text-color-secondary);
+    text-align: left;
   }
 }
 
@@ -86,9 +196,28 @@
   
   button {
     min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Media queries pour la responsivité */
 @media (max-width: 768px) {
   .payment-success-container {
     padding: 16px;
@@ -96,6 +225,8 @@
   
   .success-state {
     .success-icon {
+      margin-bottom: 16px;
+      
       mat-icon {
         font-size: 56px;
         width: 56px;
@@ -112,7 +243,24 @@
     }
   }
   
-  .success-actions {
+  .success-details {
+    .receipt-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .detail-item {
+      flex-direction: column;
+      
+      .detail-label {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+    }
+  }
+  
+  .error-actions, .success-actions {
     flex-direction: column;
     width: 100%;
     
