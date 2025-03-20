@@ -1,0 +1,48 @@
+/* src/app/modules/layout/components/footer/footer.component.scss */
+.footer {
+  background-color: var(--card-background);
+  border-top: 1px solid var(--border-color);
+  padding: 16px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-left {
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
+}
+
+.footer-right {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .footer-right {
+    justify-content: center;
+  }
+}

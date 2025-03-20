@@ -1,0 +1,69 @@
+<!-- src/app/modules/layout/components/header/header.component.html -->
+<mat-toolbar color="primary" class="header-toolbar">
+  <div class="header-left">
+    <button mat-icon-button (click)="toggleSidenav()" aria-label="Menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a routerLink="/" class="logo-container">
+      <span class="logo-text">Zendly</span>
+    </a>
+  </div>
+
+  <div class="header-right">
+    <!-- Sélecteur de thème -->
+    <button mat-icon-button [matMenuTriggerFor]="themeMenu" aria-label="Sélectionner un thème">
+      <mat-icon>palette</mat-icon>
+    </button>
+    <mat-menu #themeMenu="matMenu">
+      <button mat-menu-item *ngFor="let theme of themes" (click)="changeTheme(theme)">
+        <div class="theme-preview" [ngClass]="theme.className"></div>
+        <span>{{ theme.name }}</span>
+        <mat-icon *ngIf="activeTheme.name === theme.name">check</mat-icon>
+      </button>
+    </mat-menu>
+
+    <!-- Sélecteur de langue -->
+    <button mat-icon-button [matMenuTriggerFor]="langMenu" aria-label="Sélectionner une langue">
+      <mat-icon>language</mat-icon>
+    </button>
+    <mat-menu #langMenu="matMenu">
+      <button mat-menu-item *ngFor="let language of languages" (click)="changeLanguage(language)">
+        <span>{{ language.name }}</span>
+        <mat-icon *ngIf="currentLanguage.code === language.code">check</mat-icon>
+      </button>
+    </mat-menu>
+
+    <!-- Bouton de messagerie avec badge -->
+    <button mat-icon-button aria-label="Messages" (click)="goToMessages()">
+      <mat-icon [matBadge]="unreadMessagesCount" [matBadgeHidden]="unreadMessagesCount === 0" matBadgeColor="accent">mail</mat-icon>
+    </button>
+
+    <!-- Menu utilisateur -->
+    <ng-container *ngIf="currentUser$ | async as user; else loginButton">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu utilisateur">
+        <div class="user-avatar">{{ user.nom.charAt(0) }}{{ user.prenom.charAt(0) }}</div>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <div class="user-menu-header">
+          <div class="user-info">
+            <div class="user-name">{{ user.prenom }} {{ user.nom }}</div>
+            <div class="user-email">{{ user.mail }}</div>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="goToProfile()">
+          <mat-icon>account_circle</mat-icon>
+          <span>Profil</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Déconnexion</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+
+    <ng-template #loginButton>
+      <button mat-button routerLink="/auth/login">Connexion</button>
+    </ng-template>
+  </div>
+</mat-toolbar>

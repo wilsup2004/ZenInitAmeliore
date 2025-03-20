@@ -1,0 +1,8 @@
+<!-- src/app/app.component.html -->
+<div class="app-container">
+  <!-- Indicateur de chargement global -->
+  <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" class="global-loader"></mat-progress-bar>
+  
+  <!-- Contenu principal de l'application -->
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,136 @@
+/* src/app/modules/layout/components/theme-selector/theme-selector.component.scss */
+.theme-selector {
+  padding: 16px;
+}
+
+.theme-selector-header {
+  margin-bottom: 16px;
+  
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 16px;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border-color);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-effect);
+  }
+  
+  &.active {
+    border-color: var(--accent-color);
+    box-shadow: var(--glow-effect);
+  }
+}
+
+.theme-preview {
+  height: 100px;
+  width: 100%;
+}
+
+.theme-info {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--card-background);
+}
+
+.theme-name {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.active-icon {
+  color: var(--accent-color);
+}
+
+/* Styles spécifiques pour chaque thème */
+.cyber-neon-theme {
+  background: linear-gradient(to bottom right, #111827, #0F2942, #111827);
+  position: relative;
+  
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to right, #0BC5EA, #2B6CB0);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
+    border-radius: 2px;
+  }
+}
+
+.sugar-candy-theme {
+  background: linear-gradient(to bottom right, #FFF5F7, #FFFFFF, #EBF8FF);
+  position: relative;
+  
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to right, #D53F8C, #B83280);
+    box-shadow: 0 0 15px rgba(213, 63, 140, 0.3);
+    border-radius: 2px;
+  }
+}
+
+.emerald-ocean-theme {
+  background: linear-gradient(to bottom right, #134E4A, #115E59, #134E4A);
+  position: relative;
+  
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to right, #10B981, #0D9488);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.7);
+    border-radius: 2px;
+  }
+}
+
+.cosmic-purple-theme {
+  background: linear-gradient(to bottom right, #0F172A, #2E1065, #0F172A);
+  position: relative;
+  
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to right, #8B5CF6, #D946EF);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
+    border-radius: 2px;
+  }
+}

@@ -1,0 +1,9 @@
+/* src/app/modules/layout/components/language-selector/language-selector.component.scss */
+.language-selector {
+  display: flex;
+  align-items: center;
+  
+  mat-form-field {
+    width: 100%;
+  }
+}

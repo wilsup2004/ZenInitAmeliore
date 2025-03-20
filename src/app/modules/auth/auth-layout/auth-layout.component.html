@@ -1,0 +1,58 @@
+<!-- src/app/modules/auth/auth-layout/auth-layout.component.html -->
+<div class="auth-container">
+  <div class="auth-header">
+    <a routerLink="/" class="logo-link">
+      <h1 class="app-logo">Zendly</h1>
+    </a>
+    <div class="header-actions">
+      <button mat-icon-button [matMenuTriggerFor]="themeMenu" aria-label="Changer de thème">
+        <mat-icon>palette</mat-icon>
+      </button>
+      <mat-menu #themeMenu="matMenu">
+        <button mat-menu-item (click)="changeTheme('Cyber Neon')">
+          <div class="theme-preview cyber-neon-theme"></div>
+          <span>Cyber Neon</span>
+        </button>
+        <button mat-menu-item (click)="changeTheme('Sugar Candy')">
+          <div class="theme-preview sugar-candy-theme"></div>
+          <span>Sugar Candy</span>
+        </button>
+        <button mat-menu-item (click)="changeTheme('Emerald Ocean')">
+          <div class="theme-preview emerald-ocean-theme"></div>
+          <span>Emerald Ocean</span>
+        </button>
+        <button mat-menu-item (click)="changeTheme('Cosmic Purple')">
+          <div class="theme-preview cosmic-purple-theme"></div>
+          <span>Cosmic Purple</span>
+        </button>
+      </mat-menu>
+      
+      <button mat-icon-button [matMenuTriggerFor]="langMenu" aria-label="Changer de langue">
+        <mat-icon>language</mat-icon>
+      </button>
+      <mat-menu #langMenu="matMenu">
+        <button mat-menu-item (click)="changeLanguage('fr')">
+          <span>Français</span>
+        </button>
+        <button mat-menu-item (click)="changeLanguage('en')">
+          <span>English</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+  
+  <div class="auth-content">
+    <div class="auth-card-container">
+      <router-outlet></router-outlet>
+    </div>
+    
+    <div class="auth-footer">
+      <p>© {{ 2025 }} Zendly. Tous droits réservés.</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Mentions légales</a>
+        <a href="#" class="footer-link">Politique de confidentialité</a>
+        <a href="#" class="footer-link">Contactez-nous</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<!-- src/app/modules/layout/components/theme-selector/theme-selector.component.html -->
+<div class="theme-selector">
+  <div class="theme-selector-header">
+    <h3>Sélectionner un thème</h3>
+  </div>
+  
+  <div class="theme-options">
+    <div 
+      *ngFor="let theme of themes" 
+      class="theme-option"
+      [class.active]="activeTheme.name === theme.name"
+      (click)="changeTheme(theme)">
+      <div class="theme-preview" [ngClass]="theme.className"></div>
+      <div class="theme-info">
+        <span class="theme-name">{{ theme.name }}</span>
+        <mat-icon *ngIf="activeTheme.name === theme.name" class="active-icon">check_circle</mat-icon>
+      </div>
+    </div>
+  </div>
+</div>

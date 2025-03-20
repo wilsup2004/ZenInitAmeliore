@@ -1,0 +1,10 @@
+<!-- src/app/modules/dashboard/components/stat-card/stat-card.component.html -->
+<div class="stat-card" [ngClass]="'color-' + color" (click)="navigate()">
+  <div class="stat-icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+  <div class="stat-content">
+    <h3 class="stat-value">{{ value }}</h3>
+    <p class="stat-title">{{ title }}</p>
+  </div>
+</div>

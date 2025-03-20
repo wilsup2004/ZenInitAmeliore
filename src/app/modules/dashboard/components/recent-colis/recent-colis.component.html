@@ -1,0 +1,48 @@
+<!-- src/app/modules/dashboard/components/recent-colis/recent-colis.component.html -->
+<div class="recent-colis-container">
+  <!-- État de chargement -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Chargement des colis...</p>
+  </div>
+  
+  <!-- Aucun colis -->
+  <div *ngIf="!loading && colis.length === 0" class="empty-state">
+    <mat-icon>inventory_2</mat-icon>
+    <p>Aucun colis récent</p>
+    <button mat-raised-button color="primary" routerLink="/colis/create">Créer un colis</button>
+  </div>
+  
+  <!-- Liste des colis -->
+  <div *ngIf="!loading && colis.length > 0" class="colis-list">
+    <div *ngFor="let item of colis" class="colis-item" (click)="viewColisDetails(item.idColis)">
+      <div class="colis-info">
+        <div class="colis-id">Colis #{{ item.idColis }}</div>
+        <div class="colis-trajet">
+          <span>{{ item.villeDepart }}</span>
+          <mat-icon>arrow_forward</mat-icon>
+          <span>{{ item.villeArrivee }}</span>
+        </div>
+        <div class="colis-details">
+          <div class="colis-detail">
+            <mat-icon>scale</mat-icon>
+            <span>{{ item.nbKilo }} kg</span>
+          </div>
+          <div class="colis-detail">
+            <mat-icon>euro</mat-icon>
+            <span>{{ item.tarif }} €</span>
+          </div>
+          <div class="colis-detail">
+            <mat-icon>event</mat-icon>
+            <span>{{ item.horodatage | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="colis-status">
+        <div class="status-badge" [ngClass]="getStatusClass(item.statuts.idStatut)">
+          {{ item.statuts.libelStatut }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

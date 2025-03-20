@@ -1,0 +1,120 @@
+/* src/app/modules/auth/login/login.component.scss */
+.login-card {
+  width: 100%;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--glow-effect);
+  border-radius: 8px;
+  overflow: hidden;
+  
+  &.loading {
+    opacity: 0.8;
+    pointer-events: none;
+  }
+}
+
+mat-card-header {
+  padding: 24px 24px 0;
+  
+  mat-card-title {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+  
+  mat-card-subtitle {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+mat-card-content {
+  padding: 24px;
+}
+
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0 24px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.forgot-password {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+  }
+}
+
+.login-button {
+  padding: 8px 0;
+  font-size: 1rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  mat-spinner {
+    margin: 0 auto;
+  }
+}
+
+mat-card-actions {
+  padding: 0 24px 24px;
+}
+
+.register-link {
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--accent-color);
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  mat-card-header {
+    padding: 16px 16px 0;
+    
+    mat-card-title {
+      font-size: 1.3rem;
+    }
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+  
+  mat-card-actions {
+    padding: 0 16px 16px;
+  }
+}

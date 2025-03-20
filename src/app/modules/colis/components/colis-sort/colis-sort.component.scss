@@ -1,0 +1,21 @@
+/* src/app/modules/colis/components/colis-sort/colis-sort.component.scss */
+.sort-container {
+  display: flex;
+  align-items: center;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background-color: var(--translucent-bg);
+  color: var(--text-color);
+  
+  mat-icon {
+    color: var(--text-color-secondary);
+  }
+}

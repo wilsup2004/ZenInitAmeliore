@@ -1,0 +1,85 @@
+<!-- src/app/modules/auth/register/register.component.html -->
+<mat-card class="register-card" [class.loading]="loading">
+  <mat-card-header>
+    <mat-card-title>Inscription</mat-card-title>
+    <mat-card-subtitle>Créez votre compte Zendly</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    
+    <!-- Formulaire d'inscription -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="nom" placeholder="Dupont" required>
+          <mat-error *ngIf="f['nom'].errors?.['required']">Le nom est requis</mat-error>
+          <mat-error *ngIf="f['nom'].errors?.['minlength']">Le nom doit contenir au moins 2 caractères</mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Prénom</mat-label>
+          <input matInput formControlName="prenom" placeholder="Jean" required>
+          <mat-error *ngIf="f['prenom'].errors?.['required']">Le prénom est requis</mat-error>
+          <mat-error *ngIf="f['prenom'].errors?.['minlength']">Le prénom doit contenir au moins 2 caractères</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="exemple@email.com" required>
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="f['email'].errors?.['required']">L'email est requis</mat-error>
+        <mat-error *ngIf="f['email'].errors?.['email']">Veuillez entrer un email valide</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="f['password'].errors?.['required']">Le mot de passe est requis</mat-error>
+        <mat-error *ngIf="f['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmer le mot de passe</mat-label>
+        <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" required>
+        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
+          <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="f['confirmPassword'].errors?.['required']">La confirmation du mot de passe est requise</mat-error>
+        <mat-error *ngIf="f['confirmPassword'].errors?.['passwordMismatch']">Les mots de passe ne correspondent pas</mat-error>
+      </mat-form-field>
+      
+      <div class="terms-checkbox">
+        <mat-checkbox formControlName="acceptTerms" color="primary" required>
+          J'accepte les <a href="#" class="terms-link">conditions d'utilisation</a> et la <a href="#" class="terms-link">politique de confidentialité</a>
+        </mat-checkbox>
+        <mat-error *ngIf="f['acceptTerms'].errors?.['required'] && registerForm.touched" class="terms-error">
+          Vous devez accepter les conditions d'utilisation
+        </mat-error>
+      </div>
+      
+      <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid || loading" class="full-width register-button">
+        <span *ngIf="!loading">S'inscrire</span>
+        <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
+      </button>
+    </form>
+  </mat-card-content>
+  
+  <mat-card-actions align="center">
+    <div class="login-link">
+      Vous avez déjà un compte? <a routerLink="/auth/login">Se connecter</a>
+    </div>
+  </mat-card-actions>
+  
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

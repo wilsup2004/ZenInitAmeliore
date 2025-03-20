@@ -1,0 +1,88 @@
+<!-- src/app/modules/dashboard/dashboard.component.html -->
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1 class="dashboard-title">Tableau de bord</h1>
+    <p class="dashboard-subtitle" *ngIf="currentUser">Bienvenue, {{ currentUser.prenom }} {{ currentUser.nom }}</p>
+  </header>
+  
+  <!-- Statistiques -->
+  <div class="stat-cards-container">
+    <app-stat-card *ngFor="let card of statCards" 
+      [title]="card.title" 
+      [value]="card.value" 
+      [icon]="card.icon" 
+      [color]="card.color" 
+      [route]="card.route">
+    </app-stat-card>
+  </div>
+  
+  <div class="dashboard-content">
+    <div class="dashboard-row">
+      <!-- Colis récents -->
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>Mes colis récents</mat-card-title>
+          <div class="card-actions">
+            <button mat-button color="primary" routerLink="/colis">Voir tous</button>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <app-recent-colis [colis]="recentColis" [loading]="loading"></app-recent-colis>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Activités récentes -->
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>Activités récentes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <app-activity-feed [activities]="activities" [loading]="loading"></app-activity-feed>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <div class="dashboard-row">
+      <!-- Trajets récents -->
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>Mes trajets récents</mat-card-title>
+          <div class="card-actions">
+            <button mat-button color="primary" routerLink="/trajet">Voir tous</button>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <app-recent-trajets [trajets]="recentTrajets" [loading]="loading"></app-recent-trajets>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Actions rapides -->
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>Actions rapides</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="quick-actions">
+            <button mat-raised-button color="primary" routerLink="/colis/create">
+              <mat-icon>add</mat-icon>
+              Nouveau colis
+            </button>
+            <button mat-raised-button color="accent" routerLink="/trajet/create">
+              <mat-icon>flight</mat-icon>
+              Déclarer un trajet
+            </button>
+            <button mat-raised-button color="warn" routerLink="/messaging">
+              <mat-icon>message</mat-icon>
+              Messages
+              <mat-badge *ngIf="statCards[0].value > 0" [matBadge]="statCards[0].value" matBadgeSize="small" matBadgeColor="warn"></mat-badge>
+            </button>
+            <button mat-raised-button routerLink="/payment">
+              <mat-icon>payment</mat-icon>
+              Paiements
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

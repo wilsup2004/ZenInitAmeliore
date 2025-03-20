@@ -1,0 +1,33 @@
+<!-- src/app/modules/layout/components/sidenav/sidenav.component.html -->
+<div class="sidenav-container">
+  <div class="sidenav-header">
+    <div class="app-logo">Zendly</div>
+    <div class="app-slogan">Vos colis entre de bonnes mains</div>
+  </div>
+  
+  <mat-divider></mat-divider>
+  
+  <mat-nav-list class="sidenav-list">
+    <a mat-list-item 
+       *ngFor="let item of navigationItems" 
+       [routerLink]="item.route"
+       routerLinkActive="active-link">
+      <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+      <span matListItemTitle>{{ item.label }}</span>
+      <span matBadge="{{ item.badge }}" 
+            matBadgeOverlap="false" 
+            matBadgeColor="accent" 
+            [matBadgeHidden]="!item.badge || item.badge === 0"
+            class="sidenav-item-badge">
+      </span>
+    </a>
+  </mat-nav-list>
+  
+  <div class="sidenav-footer">
+    <mat-divider></mat-divider>
+    <div class="footer-content">
+      <span>© 2025 Zendly</span>
+      <span>v1.0.0</span>
+    </div>
+  </div>
+</div>

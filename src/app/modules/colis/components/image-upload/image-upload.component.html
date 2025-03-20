@@ -1,0 +1,31 @@
+<!-- src/app/modules/colis/components/image-upload/image-upload.component.html -->
+<div class="image-upload-container" 
+     [class.drag-over]="dragOver"
+     (dragover)="onDragOver($event)"
+     (dragleave)="onDragLeave($event)"
+     (drop)="onDrop($event)">
+  
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  
+  <!-- Aperçu de l'image -->
+  <div *ngIf="imageUrl" class="image-preview">
+    <img [src]="imageUrl" alt="Aperçu de l'image">
+    <button mat-icon-button color="warn" class="remove-button" (click)="removeImage()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  
+  <!-- Zone de drop et bouton d'upload -->
+  <div *ngIf="!imageUrl" class="upload-zone">
+    <mat-icon class="upload-icon">cloud_upload</mat-icon>
+    <span class="upload-label">{{ label }}</span>
+    <p class="upload-hint">Glissez et déposez une image ou</p>
+    <button mat-raised-button color="primary" class="select-button">
+      Parcourir
+      <input type="file" [accept]="accept" (change)="onFileSelected($event)" class="file-input">
+    </button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<!-- src/app/modules/layout/components/language-selector/language-selector.component.html -->
+<div class="language-selector">
+  <mat-form-field appearance="fill">
+    <mat-label>Langue</mat-label>
+    <mat-select [value]="currentLanguage.code" (selectionChange)="changeLanguage($event.value)">
+      <mat-option *ngFor="let language of languages" [value]="language">
+        {{ language.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

@@ -1,0 +1,64 @@
+/* src/app/modules/layout/components/sidenav/sidenav.component.scss */
+.sidenav-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--card-background);
+}
+
+.sidenav-header {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.app-logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+.app-slogan {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.sidenav-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidenav-footer {
+  padding: 16px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  padding-top: 8px;
+}
+
+.active-link {
+  background-color: var(--translucent-bg);
+  border-left: 3px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Style pour le titre des éléments actifs */
+.active-link .mdc-list-item__content {
+  color: var(--accent-color);
+}
+
+/* Style pour les icônes des éléments actifs */
+.active-link .mat-icon {
+  color: var(--accent-color);
+}
+
+/* Ajuster l'apparence du badge */
+.sidenav-item-badge {
+  margin-left: auto;
+}

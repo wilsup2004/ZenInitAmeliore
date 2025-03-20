@@ -1,0 +1,69 @@
+<!-- src/app/modules/colis/components/colis-item/colis-item.component.html -->
+<mat-card class="colis-item-card" (click)="viewColisDetails()">
+  <div class="colis-item-header">
+    <div class="colis-id">Colis #{{ colis.idColis }}</div>
+    <div class="status-badge" [ngClass]="getStatusClass(colis.statuts.idStatut)">
+      {{ colis.statuts.libelStatut }}
+    </div>
+  </div>
+  
+  <div class="colis-item-image">
+    <img *ngIf="imageUrl && !imageLoading" [src]="imageUrl" alt="Photo du colis">
+    <div *ngIf="imageLoading" class="image-loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    <div *ngIf="!imageUrl && !imageLoading" class="no-image">
+      <mat-icon>image_not_supported</mat-icon>
+      <span>Pas d'image</span>
+    </div>
+  </div>
+  
+  <mat-card-content>
+    <div class="colis-trajet">
+      <div class="colis-ville">
+        <div class="ville-label">De :</div>
+        <div class="ville-name">{{ colis.villeDepart }}</div>
+      </div>
+      <mat-icon>arrow_downward</mat-icon>
+      <div class="colis-ville">
+        <div class="ville-label">À :</div>
+        <div class="ville-name">{{ colis.villeArrivee }}</div>
+      </div>
+    </div>
+    
+    <div class="colis-details">
+      <div class="colis-detail">
+        <mat-icon>scale</mat-icon>
+        <span>{{ colis.nbKilo }} kg</span>
+      </div>
+      <div class="colis-detail">
+        <mat-icon>straighten</mat-icon>
+        <span>{{ colis.longueur }}×{{ colis.largeur }}×{{ colis.hauteur }} cm</span>
+      </div>
+      <div class="colis-detail">
+        <mat-icon>euro</mat-icon>
+        <span>{{ colis.tarif }} €</span>
+      </div>
+    </div>
+    
+    <div class="colis-date">
+      <mat-icon>event</mat-icon>
+      <span>Créé le {{ colis.horodatage | date:'dd/MM/yyyy' }}</span>
+    </div>
+    
+    <div *ngIf="colis.description" class="colis-description">
+      <p>{{ colis.description | slice:0:100 }}{{ colis.description.length > 100 ? '...' : '' }}</p>
+    </div>
+  </mat-card-content>
+  
+  <mat-card-actions>
+    <button mat-button color="primary">
+      <mat-icon>visibility</mat-icon>
+      Détails
+    </button>
+    <button mat-button *ngIf="colis.statuts.idStatut === 1">
+      <mat-icon>edit</mat-icon>
+      Modifier
+    </button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,73 @@
+<!-- src/app/modules/colis/colis-list/colis-list.component.html -->
+<div class="colis-list-container">
+  <header class="colis-list-header">
+    <div class="header-title">
+      <h1>Gestion des colis</h1>
+      <p *ngIf="currentUser">Gérez vos colis et prises en charge</p>
+    </div>
+    
+    <div class="header-actions">
+      <button mat-raised-button color="primary" routerLink="/colis/create">
+        <mat-icon>add</mat-icon>
+        Nouveau colis
+      </button>
+    </div>
+  </header>
+  
+  <!-- Onglets -->
+  <div class="colis-tabs">
+    <div class="tab" [class.active]="activeTab === 'mes-colis'" (click)="changeTab('mes-colis')">
+      <mat-icon>inventory_2</mat-icon>
+      <span>Mes colis</span>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'mes-prises'" (click)="changeTab('mes-prises')">
+      <mat-icon>check_circle</mat-icon>
+      <span>Mes prises en charge</span>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'disponibles'" (click)="changeTab('disponibles')">
+      <mat-icon>search</mat-icon>
+      <span>Colis disponibles</span>
+    </div>
+  </div>
+  
+  <!-- Filtres et tri -->
+  <div class="filter-sort-container">
+    <app-colis-filter 
+      [filter]="filter"
+      (filterChange)="applyFilter($event)">
+    </app-colis-filter>
+    
+    <app-colis-sort
+      [sort]="sort"
+      (sortChange)="applySort($event)">
+    </app-colis-sort>
+  </div>
+  
+  <!-- État de chargement -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Chargement des colis...</p>
+  </div>
+  
+  <!-- Aucun colis -->
+  <div *ngIf="!loading && filteredColis.length === 0" class="empty-state">
+    <mat-icon>inventory_2</mat-icon>
+    <p *ngIf="activeTab === 'mes-colis'">Vous n'avez pas encore de colis</p>
+    <p *ngIf="activeTab === 'mes-prises'">Vous n'avez pas encore de prises en charge</p>
+    <p *ngIf="activeTab === 'disponibles'">Aucun colis disponible pour votre recherche</p>
+    <button *ngIf="activeTab === 'mes-colis'" mat-raised-button color="primary" routerLink="/colis/create">
+      Créer un colis
+    </button>
+    <button *ngIf="activeTab === 'disponibles'" mat-raised-button color="primary" (click)="filter = { statut: null, villeDepart: null, villeArrivee: null }; loadColisByTab()">
+      Réinitialiser les filtres
+    </button>
+  </div>
+  
+  <!-- Liste des colis -->
+  <div *ngIf="!loading && filteredColis.length > 0" class="colis-grid">
+    <app-colis-item 
+      *ngFor="let colis of filteredColis" 
+      [colis]="colis">
+    </app-colis-item>
+  </div>
+</div>

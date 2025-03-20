@@ -1,0 +1,55 @@
+<!-- src/app/modules/auth/login/login.component.html -->
+<mat-card class="login-card" [class.loading]="loading">
+  <mat-card-header>
+    <mat-card-title>Connexion</mat-card-title>
+    <mat-card-subtitle>Connectez-vous à votre compte Zendly</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    
+    <!-- Formulaire de connexion -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="exemple@email.com" required>
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="f['email'].errors?.['required']">L'email est requis</mat-error>
+        <mat-error *ngIf="f['email'].errors?.['email']">Veuillez entrer un email valide</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="f['password'].errors?.['required']">Le mot de passe est requis</mat-error>
+        <mat-error *ngIf="f['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</mat-error>
+      </mat-form-field>
+      
+      <div class="form-options">
+        <mat-checkbox formControlName="rememberMe" color="primary">Se souvenir de moi</mat-checkbox>
+        <a routerLink="/auth/forgot-password" class="forgot-password">Mot de passe oublié?</a>
+      </div>
+      
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="full-width login-button">
+        <span *ngIf="!loading">Se connecter</span>
+        <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
+      </button>
+    </form>
+  </mat-card-content>
+  
+  <mat-card-actions align="center">
+    <div class="register-link">
+      Vous n'avez pas de compte? <a routerLink="/auth/register">Créer un compte</a>
+    </div>
+  </mat-card-actions>
+  
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

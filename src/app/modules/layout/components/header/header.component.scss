@@ -1,0 +1,87 @@
+/* src/app/modules/layout/components/header/header.component.scss */
+.header-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  background-image: var(--primary-color-gradient);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  margin-left: 8px;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: white;
+}
+
+.user-menu-header {
+  padding: 16px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.user-email {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.theme-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+/* Styles spécifiques pour chaque thème */
+.cyber-neon-theme {
+  background: linear-gradient(to right, #0BC5EA, #2B6CB0);
+}
+
+.sugar-candy-theme {
+  background: linear-gradient(to right, #D53F8C, #B83280);
+}
+
+.emerald-ocean-theme {
+  background: linear-gradient(to right, #10B981, #0D9488);
+}
+
+.cosmic-purple-theme {
+  background: linear-gradient(to right, #8B5CF6, #D946EF);
+}

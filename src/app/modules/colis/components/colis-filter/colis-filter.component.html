@@ -1,0 +1,35 @@
+<!-- src/app/modules/colis/components/colis-filter/colis-filter.component.html -->
+<div class="filter-container">
+  <form [formGroup]="filterForm" class="filter-form">
+    <div class="filter-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Statut</mat-label>
+        <mat-select formControlName="statut">
+          <mat-option *ngFor="let statut of statuts" [value]="statut.id">
+            {{ statut.libel }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Ville de départ</mat-label>
+        <input matInput formControlName="villeDepart" placeholder="Ex. Paris">
+        <button *ngIf="filterForm.get('villeDepart')?.value" mat-icon-button matSuffix (click)="filterForm.get('villeDepart')?.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Ville d'arrivée</mat-label>
+        <input matInput formControlName="villeArrivee" placeholder="Ex. Lyon">
+        <button *ngIf="filterForm.get('villeArrivee')?.value" mat-icon-button matSuffix (click)="filterForm.get('villeArrivee')?.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <button mat-icon-button color="warn" (click)="resetFilters()" matTooltip="Réinitialiser les filtres">
+        <mat-icon>filter_alt_off</mat-icon>
+      </button>
+    </div>
+  </form>
+</div>
