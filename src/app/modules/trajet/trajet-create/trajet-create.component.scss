@@ -1,0 +1,225 @@
+/* src/app/modules/trajet/trajet-create/trajet-create.component.scss */
+.trajet-create-container {
+  padding: 24px;
+}
+
+.trajet-create-header {
+  margin-bottom: 24px;
+  
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.warning-card {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  margin-bottom: 24px;
+  
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    
+    mat-icon {
+      color: #FFC107;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+    
+    span {
+      flex: 1;
+    }
+  }
+}
+
+.trajet-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--glow-effect);
+  
+  &:hover {
+    box-shadow: var(--hover-glow);
+  }
+  
+  mat-card-header {
+    padding: 16px 16px 0;
+    
+    mat-card-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+}
+
+.declaration-type {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  .type-label {
+    margin-right: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+.vol-search-section {
+  margin-bottom: 24px;
+}
+
+.aeroport-selection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  .arrow-icon {
+    color: var(--text-color-secondary);
+  }
+}
+
+.search-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.search-results {
+  margin-top: 16px;
+  
+  h3 {
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-color);
+  }
+}
+
+.vols-table {
+  width: 100%;
+  
+  .selected-row {
+    background-color: var(--translucent-bg);
+  }
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 16px 0;
+  
+  span {
+    color: var(--text-color-secondary);
+  }
+}
+
+.form-section {
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  .full-width {
+    flex: 1;
+  }
+  
+  .arrow-icon {
+    color: var(--text-color-secondary);
+  }
+}
+
+.terms-container {
+  margin-bottom: 24px;
+  
+  .terms-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  
+  button {
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    mat-spinner {
+      margin: 0 auto;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .trajet-create-container {
+    padding: 16px;
+  }
+  
+  .trajet-create-header {
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    p {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .aeroport-selection,
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+    
+    .arrow-icon {
+      margin: 8px 0;
+      transform: rotate(90deg);
+    }
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

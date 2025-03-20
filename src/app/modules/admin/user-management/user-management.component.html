@@ -1,0 +1,222 @@
+<!-- src/app/modules/admin/user-management/user-management.component.html -->
+<div class="user-management-container">
+  <header class="user-management-header">
+    <div class="header-title">
+      <h1>Gestion des utilisateurs</h1>
+      <p>Gérez les utilisateurs et les administrateurs de la plateforme</p>
+    </div>
+  </header>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des utilisateurs...</p>
+  </div>
+  
+  <!-- Content tabs -->
+  <div *ngIf="!loading" class="content-tabs">
+    <mat-tab-group>
+      <!-- Users tab -->
+      <mat-tab label="Utilisateurs">
+        <div class="tab-content">
+          <div class="table-header">
+            <mat-form-field appearance="outline">
+              <mat-label>Rechercher</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Jean Dupont">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <div class="table-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+              <!-- ID Column -->
+              <ng-container matColumnDef="idUser">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                <td mat-cell *matCellDef="let user"> {{user.idUser}} </td>
+              </ng-container>
+              
+              <!-- Last Name Column -->
+              <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+                <td mat-cell *matCellDef="let user"> {{user.nom}} </td>
+              </ng-container>
+              
+              <!-- First Name Column -->
+              <ng-container matColumnDef="prenom">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Prénom </th>
+                <td mat-cell *matCellDef="let user"> {{user.prenom}} </td>
+              </ng-container>
+              
+              <!-- Email Column -->
+              <ng-container matColumnDef="mail">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                <td mat-cell *matCellDef="let user"> {{user.mail}} </td>
+              </ng-container>
+              
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let user"> 
+                  <button 
+                    mat-icon-button 
+                    [color]="user.isActive ? 'warn' : 'accent'"
+                    (click)="toggleUserStatus(user)"
+                    matTooltip="{{user.isActive ? 'Désactiver' : 'Activer'}} l'utilisateur">
+                    <mat-icon>{{user.isActive ? 'block' : 'check_circle'}}</mat-icon>
+                  </button>
+                  
+                  <button 
+                    mat-icon-button 
+                    color="primary"
+                    (click)="promoteToAdmin(user)"
+                    matTooltip="Promouvoir comme administrateur"
+                    *ngIf="user.isActive && !admins.some(a => a.user.idUser === user.idUser)">
+                    <mat-icon>admin_panel_settings</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="5">Aucun utilisateur trouvé</td>
+              </tr>
+            </table>
+            
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </mat-tab>
+      
+      <!-- Admins tab -->
+      <mat-tab label="Administrateurs">
+        <div class="tab-content">
+          <div class="table-header">
+            <mat-form-field appearance="outline">
+              <mat-label>Rechercher</mat-label>
+              <input matInput (keyup)="applyAdminFilter($event)" placeholder="Ex. Jean Dupont">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <div class="table-container">
+            <table mat-table [dataSource]="adminDataSource" matSort>
+              <!-- ID Column -->
+              <ng-container matColumnDef="idUser">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                <td mat-cell *matCellDef="let admin"> {{admin.user.idUser}} </td>
+              </ng-container>
+              
+              <!-- Last Name Column -->
+              <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+                <td mat-cell *matCellDef="let admin"> {{admin.user.nom}} </td>
+              </ng-container>
+              
+              <!-- First Name Column -->
+              <ng-container matColumnDef="prenom">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Prénom </th>
+                <td mat-cell *matCellDef="let admin"> {{admin.user.prenom}} </td>
+              </ng-container>
+              
+              <!-- Admin Level Column -->
+              <ng-container matColumnDef="adminLevel">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Niveau </th>
+                <td mat-cell *matCellDef="let admin"> {{admin.adminLevel}} </td>
+              </ng-container>
+              
+              <!-- Creation Date Column -->
+              <ng-container matColumnDef="creationDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date de création </th>
+                <td mat-cell *matCellDef="let admin"> {{admin.creationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+              
+              <!-- Last Login Column -->
+              <ng-container matColumnDef="lastLogin">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Dernière connexion </th>
+                <td mat-cell *matCellDef="let admin"> {{admin.lastLogin | date:'dd/MM/yyyy HH:mm'}} </td>
+              </ng-container>
+              
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let admin"> 
+                  <button 
+                    mat-icon-button 
+                    color="primary"
+                    (click)="updateAdminLevel(admin)"
+                    matTooltip="Modifier le niveau d'administrateur">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  
+                  <button 
+                    mat-icon-button 
+                    color="warn"
+                    (click)="removeAdmin(admin)"
+                    matTooltip="Supprimer les droits d'administrateur"
+                    [disabled]="admin.user.idUser === currentUser?.idUser">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="adminDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: adminDisplayedColumns;"></tr>
+              
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="7">Aucun administrateur trouvé</td>
+              </tr>
+            </table>
+            
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  
+  <!-- Admin form -->
+  <div class="admin-form-overlay" *ngIf="showAdminForm">
+    <mat-card class="admin-form-card">
+      <mat-card-header>
+        <mat-card-title>Créer un administrateur</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="adminForm" (ngSubmit)="createAdmin()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ID Utilisateur</mat-label>
+            <input matInput formControlName="userId" readonly>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Niveau d'administrateur</mat-label>
+            <input matInput type="number" formControlName="adminLevel" min="1" max="3">
+            <mat-hint>1: Super Admin, 2: Admin, 3: Modérateur</mat-hint>
+            <mat-error *ngIf="adminForm.get('adminLevel')?.hasError('required')">
+              Le niveau d'administrateur est requis
+            </mat-error>
+            <mat-error *ngIf="adminForm.get('adminLevel')?.hasError('min') || adminForm.get('adminLevel')?.hasError('max')">
+              Le niveau doit être entre 1 et 3
+            </mat-error>
+          </mat-form-field>
+          
+          <div class="form-actions">
+            <button type="button" mat-button (click)="cancelAdminForm()">Annuler</button>
+            <button 
+              type="submit" 
+              mat-raised-button 
+              color="primary" 
+              [disabled]="adminForm.invalid || processingAdmin">
+              <span *ngIf="!processingAdmin">Créer</span>
+              <mat-spinner *ngIf="processingAdmin" diameter="24"></mat-spinner>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
