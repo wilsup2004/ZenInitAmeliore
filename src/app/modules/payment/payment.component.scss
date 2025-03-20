@@ -1,0 +1,272 @@
+/* src/app/modules/payment/payment.component.scss */
+.payment-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.payment-header {
+  margin-bottom: 24px;
+  
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  
+  p {
+    margin-top: 16px;
+    color: var(--text-color-secondary);
+    font-size: 1.1rem;
+  }
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+}
+
+mat-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--glow-effect);
+  
+  mat-card-header {
+    padding: 16px 16px 0;
+    
+    mat-card-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+}
+
+.order-details {
+  margin-bottom: 16px;
+}
+
+.order-item {
+  display: flex;
+  margin-bottom: 12px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  .item-label {
+    width: 120px;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .item-value {
+    flex: 1;
+    color: var(--text-color-secondary);
+  }
+}
+
+mat-divider {
+  margin: 16px 0;
+}
+
+.order-total {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  
+  .total-label {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-right: 16px;
+  }
+  
+  .total-value {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+  }
+}
+
+.payment-methods {
+  margin-bottom: 24px;
+  
+  mat-label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 16px;
+  }
+}
+
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.payment-method-item {
+  cursor: pointer;
+  
+  .method-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8px;
+  }
+  
+  .method-name {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .method-description {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.card-details, .mobile-money-details {
+  margin-top: 24px;
+  
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 16px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.payment-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  
+  button[type="submit"] {
+    min-width: 150px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    mat-spinner {
+      margin: 0 auto;
+    }
+  }
+}
+
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 0;
+  max-width: 600px;
+  margin: 0 auto;
+  
+  .success-icon {
+    margin-bottom: 24px;
+    
+    mat-icon {
+      font-size: 72px;
+      width: 72px;
+      height: 72px;
+      color: #4CAF50;
+    }
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 24px;
+  }
+  
+  .success-details {
+    background-color: var(--translucent-bg);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+    
+    p {
+      margin-bottom: 8px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  button {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 16px;
+  }
+  
+  .payment-header {
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    p {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .payment-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

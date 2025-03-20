@@ -1,0 +1,131 @@
+<!-- src/app/modules/messaging/messaging.component.html -->
+<div class="messaging-container">
+  <div class="messaging-sidebar">
+    <div class="sidebar-header">
+      <h2>Messages</h2>
+    </div>
+    
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-state">
+      <mat-spinner diameter="30"></mat-spinner>
+      <p>Chargement des conversations...</p>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="!loading && chatRooms.length === 0" class="empty-state">
+      <mat-icon>forum</mat-icon>
+      <p>Vous n'avez pas encore de conversations</p>
+    </div>
+    
+    <!-- Chat rooms list -->
+    <div *ngIf="!loading && chatRooms.length > 0" class="chat-rooms-list">
+      <div 
+        *ngFor="let room of chatRooms" 
+        class="chat-room-item" 
+        [class.active]="selectedRoomId === room.id"
+        (click)="selectRoom(room.id)">
+        
+        <div class="room-avatar">
+          <mat-icon>{{ room.relatedColis ? 'inventory_2' : 'flight' }}</mat-icon>
+        </div>
+        
+        <div class="room-info">
+          <div class="room-header">
+            <span class="room-name">{{ room.name }}</span>
+            <span *ngIf="room.lastMessageDate" class="room-date">{{ getFormattedDate(room.lastMessageDate) }}</span>
+          </div>
+          
+          <div class="room-participants">
+            <span class="participant-name">{{ getOtherUser(room)?.name }}</span>
+          </div>
+          
+          <div *ngIf="room.lastMessage" class="room-last-message">
+            {{ room.lastMessage }}
+          </div>
+        </div>
+        
+        <div *ngIf="room.unreadCount > 0" class="unread-badge">
+          {{ room.unreadCount }}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="messaging-content">
+    <!-- No conversation selected -->
+    <div *ngIf="!selectedRoomId" class="no-conversation">
+      <mat-icon>chat</mat-icon>
+      <h3>Sélectionnez une conversation pour commencer à discuter</h3>
+      <p>Ou créez-en une nouvelle en contactant un utilisateur depuis son profil</p>
+    </div>
+    
+    <!-- Conversation -->
+    <div *ngIf="selectedRoomId" class="conversation-container">
+      <!-- Conversation header -->
+      <div class="conversation-header">
+        <div class="conversation-info">
+          <h3>{{ chatRooms.find(r => r.id === selectedRoomId)?.name }}</h3>
+          <p>{{ getOtherUser(chatRooms.find(r => r.id === selectedRoomId)!)?.name }}</p>
+        </div>
+        
+        <!-- Additional actions -->
+        <div class="conversation-actions">
+          <button mat-icon-button matTooltip="Voir les détails">
+            <mat-icon>info</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Messages -->
+      <div class="conversation-messages" #chatMessages>
+        <!-- Loading state -->
+        <div *ngIf="loadingMessages" class="messages-loading">
+          <mat-spinner diameter="30"></mat-spinner>
+          <p>Chargement des messages...</p>
+        </div>
+        
+        <!-- Empty state -->
+        <div *ngIf="!loadingMessages && messages.length === 0" class="messages-empty">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <p>Aucun message dans cette conversation</p>
+          <p>Envoyez le premier message !</p>
+        </div>
+        
+        <!-- Messages list -->
+        <div *ngIf="!loadingMessages && messages.length > 0" class="messages-list">
+          <div *ngFor="let message of messages" 
+               class="message-item" 
+               [class.own-message]="isOwnMessage(message)"
+               [class.other-message]="!isOwnMessage(message)">
+            
+            <div class="message-content">
+              <div class="message-text">{{ message.message }}</div>
+              <div class="message-time">{{ getFormattedDate(message.horodatage) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Message input -->
+      <div class="conversation-input">
+        <form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+          <mat-form-field appearance="outline" class="message-field">
+            <input 
+              matInput 
+              formControlName="message" 
+              placeholder="Tapez votre message..." 
+              autocomplete="off">
+            <button 
+              type="submit" 
+              mat-icon-button 
+              matSuffix 
+              color="primary" 
+              [disabled]="messageForm.invalid">
+              <mat-icon>send</mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

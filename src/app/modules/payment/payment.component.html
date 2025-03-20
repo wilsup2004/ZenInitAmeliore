@@ -1,0 +1,178 @@
+<!-- src/app/modules/payment/payment.component.html -->
+<div class="payment-container">
+  <header class="payment-header">
+    <h1>Paiement</h1>
+    <p>Effectuez le paiement pour votre colis</p>
+  </header>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des informations...</p>
+  </div>
+  
+  <!-- Payment form -->
+  <div *ngIf="!loading && !success" class="payment-content">
+    <div class="payment-grid">
+      <!-- Order summary -->
+      <mat-card class="order-summary-card">
+        <mat-card-header>
+          <mat-card-title>Récapitulatif de commande</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngIf="colis" class="order-details">
+            <div class="order-item">
+              <div class="item-label">Colis :</div>
+              <div class="item-value">Colis #{{ colis.idColis }}</div>
+            </div>
+            
+            <div class="order-item">
+              <div class="item-label">Trajet :</div>
+              <div class="item-value">{{ colis.villeDepart }} → {{ colis.villeArrivee }}</div>
+            </div>
+            
+            <div *ngIf="prise" class="order-item">
+              <div class="item-label">Transporteur :</div>
+              <div class="item-value">{{ prise.users.prenom }} {{ prise.users.nom }}</div>
+            </div>
+            
+            <div class="order-item">
+              <div class="item-label">Dimensions :</div>
+              <div class="item-value">{{ colis.longueur }} × {{ colis.largeur }} × {{ colis.hauteur }} cm</div>
+            </div>
+            
+            <div class="order-item">
+              <div class="item-label">Poids :</div>
+              <div class="item-value">{{ colis.nbKilo }} kg</div>
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <div *ngIf="colis" class="order-total">
+            <div class="total-label">Total :</div>
+            <div class="total-value">{{ colis.tarif }} €</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Payment method selection -->
+      <mat-card class="payment-method-card">
+        <mat-card-header>
+          <mat-card-title>Méthode de paiement</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+            <div class="payment-methods">
+              <mat-label>Sélectionnez une méthode de paiement :</mat-label>
+              
+              <div class="payment-methods-list">
+                <mat-radio-group formControlName="paymentMethod">
+                  <div *ngFor="let method of paymentMethods" class="payment-method-item">
+                    <mat-radio-button [value]="method.idMethod">
+                      <div class="method-info">
+                        <span class="method-name">{{ method.methodName }}</span>
+                        <span class="method-description">{{ method.methodDescription }}</span>
+                      </div>
+                    </mat-radio-button>
+                  </div>
+                </mat-radio-group>
+              </div>
+            </div>
+            
+            <!-- Stripe or PayPal fields -->
+            <div *ngIf="selectedMethod?.methodName === 'Stripe' || selectedMethod?.methodName === 'PayPal'" class="card-details">
+              <h3>Détails de carte</h3>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Numéro de carte</mat-label>
+                <input matInput formControlName="cardNumber" placeholder="1234 5678 9012 3456" maxlength="16">
+                <mat-icon matSuffix>credit_card</mat-icon>
+                <mat-error *ngIf="paymentForm.get('cardNumber')?.hasError('required')">
+                  Le numéro de carte est requis
+                </mat-error>
+                <mat-error *ngIf="paymentForm.get('cardNumber')?.hasError('pattern')">
+                  Entrez un numéro de carte valide (16 chiffres)
+                </mat-error>
+              </mat-form-field>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Date d'expiration</mat-label>
+                  <input matInput formControlName="cardExpiry" placeholder="MM/YY" maxlength="5">
+                  <mat-error *ngIf="paymentForm.get('cardExpiry')?.hasError('required')">
+                    La date d'expiration est requise
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.get('cardExpiry')?.hasError('pattern')">
+                    Format invalide (MM/YY)
+                  </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>CVC</mat-label>
+                  <input matInput formControlName="cardCvc" placeholder="123" maxlength="4">
+                  <mat-error *ngIf="paymentForm.get('cardCvc')?.hasError('required')">
+                    Le code CVC est requis
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.get('cardCvc')?.hasError('pattern')">
+                    Code CVC invalide
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <!-- Orange Money fields -->
+            <div *ngIf="selectedMethod?.methodName === 'Orange Money'" class="mobile-money-details">
+              <h3>Détails Orange Money</h3>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Numéro de téléphone</mat-label>
+                <input matInput formControlName="phoneNumber" placeholder="Ex. 0123456789">
+                <mat-icon matSuffix>phone</mat-icon>
+                <mat-error *ngIf="paymentForm.get('phoneNumber')?.hasError('required')">
+                  Le numéro de téléphone est requis
+                </mat-error>
+                <mat-error *ngIf="paymentForm.get('phoneNumber')?.hasError('pattern')">
+                  Numéro de téléphone invalide
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="payment-actions">
+              <button type="button" mat-button (click)="backToDetails()">Annuler</button>
+              <button 
+                type="submit" 
+                mat-raised-button 
+                color="primary" 
+                [disabled]="paymentForm.invalid || processing">
+                <span *ngIf="!processing">Payer maintenant</span>
+                <mat-spinner *ngIf="processing" diameter="24"></mat-spinner>
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+  <!-- Success state -->
+  <div *ngIf="!loading && success" class="success-state">
+    <div class="success-icon">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    
+    <h2>Paiement réussi !</h2>
+    <p>Votre paiement a été traité avec succès.</p>
+    
+    <div class="success-details" *ngIf="colis">
+      <p>Colis #{{ colis.idColis }} : {{ colis.villeDepart }} → {{ colis.villeArrivee }}</p>
+      <p>Montant : {{ colis.tarif }} €</p>
+    </div>
+    
+    <button mat-raised-button color="primary" (click)="backToDetails()">
+      Retour aux détails du colis
+    </button>
+  </div>
+</div>

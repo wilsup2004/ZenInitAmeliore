@@ -1,0 +1,186 @@
+/* src/app/modules/trajet/trajet-list/trajet-list.component.scss */
+.trajet-list-container {
+  padding: 24px;
+}
+
+.trajet-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-title {
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    height: 40px;
+    
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
+
+.trajet-tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  color: var(--text-color-secondary);
+  
+  &:hover {
+    background-color: var(--translucent-bg);
+  }
+  
+  &.active {
+    color: var(--primary-color);
+    background-color: var(--translucent-bg);
+    font-weight: 500;
+    
+    mat-icon {
+      color: var(--primary-color);
+    }
+  }
+  
+  mat-icon {
+    color: var(--text-color-secondary);
+  }
+}
+
+.filter-sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  app-trajet-filter {
+    flex: 1;
+  }
+  
+  app-trajet-sort {
+    margin-left: 16px;
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  
+  p {
+    margin-top: 16px;
+    color: var(--text-color-secondary);
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 0;
+  
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--text-color-secondary);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    margin-bottom: 24px;
+    color: var(--text-color-secondary);
+    font-size: 1.1rem;
+  }
+}
+
+.trajet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .trajet-list-container {
+    padding: 16px;
+  }
+  
+  .trajet-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .header-title {
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    p {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .trajet-tabs {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 12px;
+    
+    .tab {
+      padding: 6px 12px;
+      white-space: nowrap;
+    }
+  }
+  
+  .filter-sort-container {
+    flex-direction: column;
+    gap: 16px;
+    
+    app-trajet-sort {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+  
+  .trajet-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,200 @@
+<!-- src/app/modules/admin/dashboard/admin-dashboard.component.html -->
+<div class="admin-dashboard-container">
+  <header class="admin-dashboard-header">
+    <div class="header-title">
+      <h1>Tableau de bord administrateur</h1>
+      <p>Gérez et surveillez les activités de la plateforme</p>
+    </div>
+  </header>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des statistiques...</p>
+  </div>
+  
+  <!-- Dashboard content -->
+  <div *ngIf="!loading" class="dashboard-content">
+    <!-- Stats cards -->
+    <div class="stats-cards">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon user-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.totalUsers || 0 }}</h3>
+            <p class="stat-label">Utilisateurs</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon colis-icon">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.totalColis || 0 }}</h3>
+            <p class="stat-label">Colis</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon trajet-icon">
+            <mat-icon>flight</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.totalTrajets || 0 }}</h3>
+            <p class="stat-label">Trajets</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon payment-icon">
+            <mat-icon>payments</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.totalRevenue || 0 }} €</h3>
+            <p class="stat-label">Revenus</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <!-- Charts section -->
+    <div class="charts-section">
+      <div class="chart-row">
+        <!-- Users chart -->
+        <mat-card class="chart-card">
+          <mat-card-header>
+            <mat-card-title>Évolution des utilisateurs</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="userStats.length > 0" class="chart-container">
+              <ngx-charts-bar-vertical
+                [results]="userStats"
+                [gradient]="true"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="false"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [xAxisLabel]="'Mois'"
+                [yAxisLabel]="'Nombre d\'utilisateurs'"
+                [scheme]="'cool'"
+                [roundDomains]="true">
+              </ngx-charts-bar-vertical>
+            </div>
+            <div *ngIf="userStats.length === 0" class="no-data-message">
+              Aucune donnée disponible
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Colis chart -->
+        <mat-card class="chart-card">
+          <mat-card-header>
+            <mat-card-title>Colis par statut</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="colisStats.length > 0" class="chart-container">
+              <ngx-charts-pie-chart
+                [results]="colisStats"
+                [gradient]="true"
+                [legend]="true"
+                [labels]="true"
+                [doughnut]="true"
+                [scheme]="'cool'"
+                [legendPosition]="'below'">
+              </ngx-charts-pie-chart>
+            </div>
+            <div *ngIf="colisStats.length === 0" class="no-data-message">
+              Aucune donnée disponible
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <div class="chart-row">
+        <!-- Payments chart -->
+        <mat-card class="chart-card">
+          <mat-card-header>
+            <mat-card-title>Revenus mensuels</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="paymentStats.length > 0" class="chart-container">
+              <ngx-charts-line-chart
+                [results]="[{name: 'Revenus', series: paymentStats}]"
+                [gradient]="true"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="false"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [xAxisLabel]="'Mois'"
+                [yAxisLabel]="'Montant (€)'"
+                [scheme]="'cool'"
+                [curve]="'monotoneX'">
+              </ngx-charts-line-chart>
+            </div>
+            <div *ngIf="paymentStats.length === 0" class="no-data-message">
+              Aucune donnée disponible
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Recent activities -->
+        <mat-card class="activities-card">
+          <mat-card-header>
+            <mat-card-title>Activités récentes</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="recentActivities.length > 0" class="activities-list">
+              <div *ngFor="let activity of recentActivities" class="activity-item">
+                <div class="activity-icon" [ngClass]="'activity-' + activity.actionType.toLowerCase()">
+                  <mat-icon>{{ getActivityIcon(activity.actionType) }}</mat-icon>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">{{ activity.actionType }}</div>
+                  <div class="activity-details">{{ activity.actionDetails }}</div>
+                  <div class="activity-time">{{ activity.actionDate | date:'dd/MM/yyyy HH:mm' }}</div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="recentActivities.length === 0" class="no-data-message">
+              Aucune activité récente
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    
+    <!-- Quick links -->
+    <div class="quick-links-section">
+      <h2>Gestion rapide</h2>
+      <div class="quick-links">
+        <a routerLink="/admin/users" class="quick-link">
+          <mat-icon>people</mat-icon>
+          <span>Gestion des utilisateurs</span>
+        </a>
+        <a routerLink="/admin/colis" class="quick-link">
+          <mat-icon>inventory_2</mat-icon>
+          <span>Gestion des colis</span>
+        </a>
+        <a routerLink="/admin/payments" class="quick-link">
+          <mat-icon>payments</mat-icon>
+          <span>Gestion des paiements</span>
+        </a>
+        <a routerLink="/admin/logs" class="quick-link">
+          <mat-icon>history</mat-icon>
+          <span>Journaux d'activité</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

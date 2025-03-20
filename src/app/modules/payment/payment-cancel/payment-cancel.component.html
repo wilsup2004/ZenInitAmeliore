@@ -1,0 +1,27 @@
+<!-- src/app/modules/payment/payment-cancel/payment-cancel.component.html -->
+<div class="payment-cancel-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Annulation du paiement...</p>
+  </div>
+  
+  <!-- Cancel state -->
+  <div *ngIf="!loading" class="cancel-state">
+    <div class="cancel-icon">
+      <mat-icon>cancel</mat-icon>
+    </div>
+    
+    <h2>Paiement annulé</h2>
+    <p>Votre paiement a été annulé. Aucun montant n'a été débité de votre compte.</p>
+    
+    <div class="cancel-actions">
+      <button mat-stroked-button (click)="backToDashboard()">
+        Retour au tableau de bord
+      </button>
+      <button mat-raised-button color="primary" (click)="retryPayment()">
+        Réessayer le paiement
+      </button>
+    </div>
+  </div>
+</div>

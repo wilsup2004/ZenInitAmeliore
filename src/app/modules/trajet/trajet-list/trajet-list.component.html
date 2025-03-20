@@ -1,0 +1,69 @@
+<!-- src/app/modules/trajet/trajet-list/trajet-list.component.html -->
+<div class="trajet-list-container">
+  <header class="trajet-list-header">
+    <div class="header-title">
+      <h1>Gestion des trajets</h1>
+      <p *ngIf="currentUser">Gérez vos trajets et découvrez les trajets disponibles</p>
+    </div>
+    
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="createTrajet()">
+        <mat-icon>add</mat-icon>
+        Nouveau trajet
+      </button>
+    </div>
+  </header>
+  
+  <!-- Onglets -->
+  <div class="trajet-tabs">
+    <div class="tab" [class.active]="activeTab === 'mes-trajets'" (click)="changeTab('mes-trajets')">
+      <mat-icon>flight_takeoff</mat-icon>
+      <span>Mes trajets</span>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'disponibles'" (click)="changeTab('disponibles')">
+      <mat-icon>search</mat-icon>
+      <span>Trajets disponibles</span>
+    </div>
+  </div>
+  
+  <!-- Filtres et tri -->
+  <div class="filter-sort-container">
+    <app-trajet-filter 
+      [filter]="filter"
+      (filterChange)="applyFilter($event)">
+    </app-trajet-filter>
+    
+    <app-trajet-sort
+      [sort]="sort"
+      (sortChange)="applySort($event)">
+    </app-trajet-sort>
+  </div>
+  
+  <!-- État de chargement -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Chargement des trajets...</p>
+  </div>
+  
+  <!-- Aucun trajet -->
+  <div *ngIf="!loading && filteredTrajets.length === 0" class="empty-state">
+    <mat-icon>flight</mat-icon>
+    <p *ngIf="activeTab === 'mes-trajets'">Vous n'avez pas encore de trajets</p>
+    <p *ngIf="activeTab === 'disponibles'">Aucun trajet disponible pour votre recherche</p>
+    <button *ngIf="activeTab === 'mes-trajets'" mat-raised-button color="primary" (click)="createTrajet()">
+      Déclarer un trajet
+    </button>
+    <button *ngIf="activeTab === 'disponibles'" mat-raised-button color="primary" (click)="filter = { statut: null, villeDepart: null, villeArrivee: null, dateMin: null, dateMax: null }; loadTrajetsByTab()">
+      Réinitialiser les filtres
+    </button>
+  </div>
+  
+  <!-- Liste des trajets -->
+  <div *ngIf="!loading && filteredTrajets.length > 0" class="trajet-grid">
+    <app-trajet-item 
+      *ngFor="let trajet of filteredTrajets" 
+      [trajet]="trajet"
+      (click)="viewTrajetDetails(trajet.idPrise)">
+    </app-trajet-item>
+  </div>
+</div>

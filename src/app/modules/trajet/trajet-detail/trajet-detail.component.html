@@ -1,0 +1,187 @@
+<!-- src/app/modules/trajet/trajet-detail/trajet-detail.component.html -->
+<div class="trajet-detail-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des informations...</p>
+  </div>
+  
+  <!-- Trajet details -->
+  <div *ngIf="!loading && trajet" class="trajet-content">
+    <div class="trajet-header">
+      <div class="trajet-title-section">
+        <h1>Trajet #{{ trajet.idPrise }}</h1>
+        <div class="status-badge" [ngClass]="getStatusClass(trajet.statuts.idStatut)">
+          {{ trajet.statuts.libelStatut }}
+        </div>
+      </div>
+      
+      <div class="trajet-actions">
+        <button *ngIf="canContact" mat-raised-button color="primary" (click)="contactOwner()">
+          <mat-icon>message</mat-icon>
+          Contacter le transporteur
+        </button>
+        
+        <button *ngIf="canCancel" mat-raised-button color="warn" (click)="cancelTrajet()">
+          <mat-icon>cancel</mat-icon>
+          Annuler
+        </button>
+      </div>
+    </div>
+    
+    <div class="trajet-details-grid">
+      <!-- Trajet information -->
+      <mat-card class="trajet-info-card">
+        <mat-card-header>
+          <mat-card-title>Informations générales</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="trajet-info-item">
+            <div class="info-label">Transporteur:</div>
+            <div class="info-value">{{ trajet.users.prenom }} {{ trajet.users.nom }}</div>
+          </div>
+          
+          <div class="trajet-info-item" *ngIf="trajet.idVol">
+            <div class="info-label">Vol:</div>
+            <div class="info-value">{{ trajet.idVol }}</div>
+          </div>
+          
+          <div class="trajet-route">
+            <div class="route-city">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ trajet.villeDepart }}</span>
+            </div>
+            
+            <div class="route-arrow">
+              <mat-icon>arrow_downward</mat-icon>
+            </div>
+            
+            <div class="route-city">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ trajet.villeArrivee }}</span>
+            </div>
+          </div>
+          
+          <div class="trajet-dates">
+            <div class="trajet-info-item">
+              <div class="info-label">Date de départ:</div>
+              <div class="info-value">{{ trajet.dateDepart | date:'dd/MM/yyyy HH:mm' }}</div>
+            </div>
+            
+            <div class="trajet-info-item">
+              <div class="info-label">Date d'arrivée:</div>
+              <div class="info-value">{{ trajet.dateArrivee | date:'dd/MM/yyyy HH:mm' }}</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Colis associés au trajet (si propriétaire) -->
+      <mat-card *ngIf="isOwner" class="matching-colis-card">
+        <mat-card-header>
+          <mat-card-title>Colis disponibles sur ce trajet</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngIf="loadingColis" class="loading-colis">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement des colis...</span>
+          </div>
+          
+          <div *ngIf="!loadingColis && matchingColis.length === 0" class="empty-colis">
+            <mat-icon>inventory_2</mat-icon>
+            <p>Aucun colis disponible sur ce trajet</p>
+          </div>
+          
+          <div *ngIf="!loadingColis && matchingColis.length > 0" class="colis-list">
+            <div *ngFor="let colis of matchingColis" class="colis-item" (click)="viewColisDetails(colis.idColis)">
+              <div class="colis-info">
+                <div class="colis-title">Colis #{{ colis.idColis }}</div>
+                <div class="colis-details">
+                  <div class="colis-detail">
+                    <mat-icon>scale</mat-icon>
+                    <span>{{ colis.nbKilo }} kg</span>
+                  </div>
+                  <div class="colis-detail">
+                    <mat-icon>straighten</mat-icon>
+                    <span>{{ colis.longueur }}×{{ colis.largeur }}×{{ colis.hauteur }} cm</span>
+                  </div>
+                  <div class="colis-detail">
+                    <mat-icon>euro</mat-icon>
+                    <span>{{ colis.tarif }} €</span>
+                  </div>
+                </div>
+              </div>
+              <button 
+                mat-icon-button 
+                color="primary" 
+                (click)="$event.stopPropagation(); associateColis(colis.idColis)" 
+                matTooltip="Associer ce colis">
+                <mat-icon>link</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Mes colis compatibles (si non propriétaire) -->
+      <mat-card *ngIf="!isOwner && currentUser" class="my-colis-card">
+        <mat-card-header>
+          <mat-card-title>Mes colis compatibles</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngIf="loadingColis" class="loading-colis">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement des colis...</span>
+          </div>
+          
+          <div *ngIf="!loadingColis && matchingColis.length === 0" class="empty-colis">
+            <mat-icon>inventory_2</mat-icon>
+            <p>Vous n'avez pas de colis compatibles avec ce trajet</p>
+            <button mat-raised-button color="primary" routerLink="/colis/create">
+              Créer un colis
+            </button>
+          </div>
+          
+          <div *ngIf="!loadingColis && matchingColis.length > 0" class="colis-list">
+            <div *ngFor="let colis of matchingColis" class="colis-item" (click)="viewColisDetails(colis.idColis)">
+              <div class="colis-info">
+                <div class="colis-title">Colis #{{ colis.idColis }}</div>
+                <div class="colis-details">
+                  <div class="colis-detail">
+                    <mat-icon>scale</mat-icon>
+                    <span>{{ colis.nbKilo }} kg</span>
+                  </div>
+                  <div class="colis-detail">
+                    <mat-icon>straighten</mat-icon>
+                    <span>{{ colis.longueur }}×{{ colis.largeur }}×{{ colis.hauteur }} cm</span>
+                  </div>
+                  <div class="colis-detail">
+                    <mat-icon>euro</mat-icon>
+                    <span>{{ colis.tarif }} €</span>
+                  </div>
+                </div>
+              </div>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="$event.stopPropagation(); associateColis(colis.idColis)">
+                Demander
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+  <!-- Error state -->
+  <div *ngIf="!loading && !trajet" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Trajet introuvable</h2>
+    <p>Le trajet demandé n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button color="primary" routerLink="/trajet">Retour à la liste des trajets</button>
+  </div>
+</div>

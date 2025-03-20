@@ -1,0 +1,50 @@
+<!-- src/app/modules/payment/payment-success/payment-success.component.html -->
+<div class="payment-success-container">
+  <!-- Loading state -->
+  <div *ngIf="loading || processingStatus" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p *ngIf="loading">Vérification du paiement...</p>
+    <p *ngIf="!loading && processingStatus">Mise à jour du statut du paiement...</p>
+  </div>
+  
+  <!-- Success state -->
+  <div *ngIf="!loading && !processingStatus" class="success-state">
+    <div class="success-icon">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    
+    <h2>Paiement réussi !</h2>
+    <p>Votre paiement a été traité avec succès.</p>
+    
+    <div *ngIf="paymentDetails" class="success-details">
+      <div class="detail-item">
+        <div class="detail-label">ID de transaction :</div>
+        <div class="detail-value">{{ paymentDetails.transactionId }}</div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-label">Statut :</div>
+        <div class="detail-value">{{ paymentDetails.status }}</div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-label">Montant :</div>
+        <div class="detail-value">{{ paymentDetails.paymentAmount }} €</div>
+      </div>
+      
+      <div class="detail-item">
+        <div class="detail-label">Date :</div>
+        <div class="detail-value">{{ paymentDetails.paymentDate | date:'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+    </div>
+    
+    <div class="success-actions">
+      <button mat-stroked-button (click)="backToDashboard()">
+        Retour au tableau de bord
+      </button>
+      <button mat-raised-button color="primary" (click)="viewColis()">
+        Voir les détails du colis
+      </button>
+    </div>
+  </div>
+</div>

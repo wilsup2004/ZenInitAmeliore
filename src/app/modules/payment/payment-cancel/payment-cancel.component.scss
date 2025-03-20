@@ -1,0 +1,94 @@
+/* src/app/modules/payment/payment-cancel/payment-cancel.component.scss */
+.payment-cancel-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  
+  p {
+    margin-top: 16px;
+    color: var(--text-color-secondary);
+    font-size: 1.1rem;
+  }
+}
+
+.cancel-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 0;
+  
+  .cancel-icon {
+    margin-bottom: 24px;
+    
+    mat-icon {
+      font-size: 72px;
+      width: 72px;
+      height: 72px;
+      color: #F44336;
+    }
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 24px;
+  }
+}
+
+.cancel-actions {
+  display: flex;
+  gap: 16px;
+  
+  button {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-cancel-container {
+    padding: 16px;
+  }
+  
+  .cancel-state {
+    .cancel-icon {
+      mat-icon {
+        font-size: 56px;
+        width: 56px;
+        height: 56px;
+      }
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .cancel-actions {
+    flex-direction: column;
+    width: 100%;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

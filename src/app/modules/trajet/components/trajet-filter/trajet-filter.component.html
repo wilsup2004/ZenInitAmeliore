@@ -1,0 +1,57 @@
+<!-- src/app/modules/trajet/components/trajet-filter/trajet-filter.component.html -->
+<div class="filter-container">
+  <form [formGroup]="filterForm" class="filter-form">
+    <div class="filter-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Statut</mat-label>
+        <mat-select formControlName="statut">
+          <mat-option *ngFor="let statut of statuts" [value]="statut.id">
+            {{ statut.libel }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Ville de départ</mat-label>
+        <input matInput formControlName="villeDepart" placeholder="Ex. Paris">
+        <button *ngIf="filterForm.get('villeDepart')?.value" mat-icon-button matSuffix (click)="filterForm.get('villeDepart')?.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Ville d'arrivée</mat-label>
+        <input matInput formControlName="villeArrivee" placeholder="Ex. Lyon">
+        <button *ngIf="filterForm.get('villeArrivee')?.value" mat-icon-button matSuffix (click)="filterForm.get('villeArrivee')?.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    
+    <div class="filter-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Date de départ min</mat-label>
+        <input matInput [matDatepicker]="pickerMin" formControlName="dateMin">
+        <mat-datepicker-toggle matSuffix [for]="pickerMin"></mat-datepicker-toggle>
+        <mat-datepicker #pickerMin></mat-datepicker>
+        <button *ngIf="filterForm.get('dateMin')?.value" mat-icon-button matSuffix (click)="filterForm.get('dateMin')?.setValue(null)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Date de départ max</mat-label>
+        <input matInput [matDatepicker]="pickerMax" formControlName="dateMax">
+        <mat-datepicker-toggle matSuffix [for]="pickerMax"></mat-datepicker-toggle>
+        <mat-datepicker #pickerMax></mat-datepicker>
+        <button *ngIf="filterForm.get('dateMax')?.value" mat-icon-button matSuffix (click)="filterForm.get('dateMax')?.setValue(null)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <button mat-icon-button color="warn" (click)="resetFilters()" matTooltip="Réinitialiser les filtres">
+        <mat-icon>filter_alt_off</mat-icon>
+      </button>
+    </div>
+  </form>
+</div>

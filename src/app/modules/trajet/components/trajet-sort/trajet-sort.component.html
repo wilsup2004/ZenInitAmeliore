@@ -1,0 +1,15 @@
+<!-- src/app/modules/trajet/components/trajet-sort/trajet-sort.component.html -->
+<div class="sort-container">
+  <button mat-button [matMenuTriggerFor]="sortMenu" class="sort-button">
+    <mat-icon>sort</mat-icon>
+    <span>Trier par: {{ getSortLabel() }}</span>
+    <mat-icon>{{ getSortIcon() }}</mat-icon>
+  </button>
+  
+  <mat-menu #sortMenu="matMenu">
+    <button mat-menu-item *ngFor="let option of sortOptions" (click)="onSortOptionChange(option.value)">
+      <span>{{ option.label }}</span>
+      <mat-icon *ngIf="sort.field === option.value">{{ getSortIcon() }}</mat-icon>
+    </button>
+  </mat-menu>
+</div>

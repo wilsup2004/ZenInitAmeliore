@@ -1,0 +1,61 @@
+<!-- src/app/modules/trajet/components/trajet-item/trajet-item.component.html -->
+<mat-card class="trajet-item-card" (click)="viewTrajetDetails()">
+  <div class="trajet-item-header">
+    <div class="trajet-id">Trajet #{{ trajet.idPrise }}</div>
+    <div class="status-badge" [ngClass]="getStatusClass(trajet.statuts.idStatut)">
+      {{ trajet.statuts.libelStatut }}
+    </div>
+  </div>
+  
+  <mat-card-content>
+    <div class="trajet-route">
+      <div class="trajet-location">
+        <div class="location-label">Départ:</div>
+        <div class="location-value">
+          <mat-icon>flight_takeoff</mat-icon>
+          <span>{{ trajet.villeDepart }}</span>
+        </div>
+        <div class="location-date">{{ trajet.dateDepart | date:'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+      
+      <mat-icon class="route-arrow">arrow_downward</mat-icon>
+      
+      <div class="trajet-location">
+        <div class="location-label">Arrivée:</div>
+        <div class="location-value">
+          <mat-icon>flight_land</mat-icon>
+          <span>{{ trajet.villeArrivee }}</span>
+        </div>
+        <div class="location-date">{{ trajet.dateArrivee | date:'dd/MM/yyyy HH:mm' }}</div>
+      </div>
+    </div>
+    
+    <div class="trajet-info">
+      <div class="trajet-detail" *ngIf="trajet.idVol">
+        <mat-icon>flight</mat-icon>
+        <span>Vol: {{ trajet.idVol }}</span>
+      </div>
+      
+      <div class="trajet-detail">
+        <mat-icon>person</mat-icon>
+        <span>Transporteur: {{ trajet.users.prenom }} {{ trajet.users.nom }}</span>
+      </div>
+      
+      <div class="trajet-detail" *ngIf="trajet.colis">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Colis associé: #{{ trajet.colis.idColis }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+  
+  <mat-card-actions>
+    <button mat-button color="primary">
+      <mat-icon>visibility</mat-icon>
+      Détails
+    </button>
+    <button mat-button *ngIf="trajet.statuts.idStatut === 1">
+      <mat-icon>edit</mat-icon>
+      Modifier
+    </button>
+  </mat-card-actions>
+</mat-card>
