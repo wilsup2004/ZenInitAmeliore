@@ -1,0 +1,291 @@
+<!-- src/app/modules/colis/colis-create/colis-create.component.html -->
+<div class="create-colis-container">
+  <header class="create-colis-header">
+    <h1>Créer un nouveau colis</h1>
+    <p>Renseignez les informations de votre colis pour le confier à un voyageur</p>
+  </header>
+  
+  <div class="create-colis-content">
+    <mat-card *ngIf="!currentUser" class="warning-card">
+      <mat-card-content>
+        <mat-icon>warning</mat-icon>
+        <span>Vous devez être connecté pour créer un colis</span>
+        <button mat-raised-button color="primary" routerLink="/auth/login">Se connecter</button>
+      </mat-card-content>
+    </mat-card>
+    
+    <form [formGroup]="colisForm" (ngSubmit)="onSubmit()" *ngIf="currentUser">
+      <mat-stepper linear #stepper>
+        <!-- Étape 1: Informations générales -->
+        <mat-step [stepControl]="colisForm">
+          <ng-template matStepLabel>Informations générales</ng-template>
+          
+          <div class="form-step-content">
+            <h3>Trajet du colis</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Ville de départ</mat-label>
+                <input matInput formControlName="villeDepart" placeholder="Ex: Paris" [matAutocomplete]="autoDep" required>
+                <mat-autocomplete #autoDep="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredDepartureCities | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="colisForm.get('villeDepart')?.hasError('required')">
+                  La ville de départ est requise
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Ville d'arrivée</mat-label>
+                <input matInput formControlName="villeArrivee" placeholder="Ex: Lyon" [matAutocomplete]="autoArr" required>
+                <mat-autocomplete #autoArr="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredArrivalCities | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="colisForm.get('villeArrivee')?.hasError('required')">
+                  La ville d'arrivée est requise
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <h3>Description du colis</h3>
+            
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea 
+                matInput 
+                formControlName="description" 
+                placeholder="Description détaillée du contenu de votre colis" 
+                rows="4"
+                required>
+              </textarea>
+              <mat-hint>Indiquez clairement le contenu, la fragilité, etc.</mat-hint>
+              <mat-error *ngIf="colisForm.get('description')?.hasError('required')">
+                La description est requise
+              </mat-error>
+            </mat-form-field>
+            
+            <div class="form-actions">
+              <button mat-button matStepperNext type="button">Suivant</button>
+            </div>
+          </div>
+        </mat-step>
+        
+        <!-- Étape 2: Dimensions et poids -->
+        <mat-step [stepControl]="colisForm">
+          <ng-template matStepLabel>Dimensions et poids</ng-template>
+          
+          <div class="form-step-content">
+            <h3>Dimensions (en cm)</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Longueur</mat-label>
+                <input 
+                  matInput 
+                  type="number" 
+                  formControlName="longueur" 
+                  placeholder="Ex: 30" 
+                  min="1" 
+                  max="150" 
+                  required>
+                <span matSuffix>cm</span>
+                <mat-error *ngIf="colisForm.get('longueur')?.hasError('required')">
+                  La longueur est requise
+                </mat-error>
+                <mat-error *ngIf="colisForm.get('longueur')?.hasError('min') || colisForm.get('longueur')?.hasError('max')">
+                  La longueur doit être entre 1 et 150 cm
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Largeur</mat-label>
+                <input 
+                  matInput 
+                  type="number" 
+                  formControlName="largeur" 
+                  placeholder="Ex: 20" 
+                  min="1" 
+                  max="150" 
+                  required>
+                <span matSuffix>cm</span>
+                <mat-error *ngIf="colisForm.get('largeur')?.hasError('required')">
+                  La largeur est requise
+                </mat-error>
+                <mat-error *ngIf="colisForm.get('largeur')?.hasError('min') || colisForm.get('largeur')?.hasError('max')">
+                  La largeur doit être entre 1 et 150 cm
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Hauteur</mat-label>
+                <input 
+                  matInput 
+                  type="number" 
+                  formControlName="hauteur" 
+                  placeholder="Ex: 15" 
+                  min="1" 
+                  max="150" 
+                  required>
+                <span matSuffix>cm</span>
+                <mat-error *ngIf="colisForm.get('hauteur')?.hasError('required')">
+                  La hauteur est requise
+                </mat-error>
+                <mat-error *ngIf="colisForm.get('hauteur')?.hasError('min') || colisForm.get('hauteur')?.hasError('max')">
+                  La hauteur doit être entre 1 et 150 cm
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="volume-display" *ngIf="colisForm.get('longueur')?.value && colisForm.get('largeur')?.value && colisForm.get('hauteur')?.value">
+              <mat-icon>view_in_ar</mat-icon>
+              <span>Volume: {{ calculateVolume() }} cm³</span>
+            </div>
+            
+            <h3>Poids</h3>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Poids</mat-label>
+              <input 
+                matInput 
+                type="number" 
+                formControlName="nbKilo" 
+                placeholder="Ex: 2,5" 
+                min="0.1" 
+                max="30" 
+                required>
+              <span matSuffix>kg</span>
+              <mat-error *ngIf="colisForm.get('nbKilo')?.hasError('required')">
+                Le poids est requis
+              </mat-error>
+              <mat-error *ngIf="colisForm.get('nbKilo')?.hasError('min') || colisForm.get('nbKilo')?.hasError('max')">
+                Le poids doit être entre 0,1 et 30 kg
+              </mat-error>
+            </mat-form-field>
+            
+            <div class="form-actions">
+              <button mat-button matStepperPrevious type="button">Précédent</button>
+              <button mat-button matStepperNext type="button">Suivant</button>
+            </div>
+          </div>
+        </mat-step>
+        
+        <!-- Étape 3: Prix et photo -->
+        <mat-step [stepControl]="colisForm">
+          <ng-template matStepLabel>Prix et photo</ng-template>
+          
+          <div class="form-step-content">
+            <h3>Prix proposé</h3>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Prix</mat-label>
+              <input 
+                matInput 
+                type="number" 
+                formControlName="tarif" 
+                placeholder="Ex: 15" 
+                min="1" 
+                required>
+              <span matSuffix>€</span>
+              <mat-error *ngIf="colisForm.get('tarif')?.hasError('required')">
+                Le prix est requis
+              </mat-error>
+              <mat-error *ngIf="colisForm.get('tarif')?.hasError('min')">
+                Le prix doit être supérieur à 0
+              </mat-error>
+            </mat-form-field>
+            
+            <h3>Photo du colis</h3>
+            
+            <div class="photo-upload-container">
+              <app-image-upload 
+                (fileSelected)="onFileSelected($event)"
+                label="Ajouter une photo du colis"
+                accept="image/*"
+                [maxSize]="5 * 1024 * 1024">
+              </app-image-upload>
+            </div>
+            
+            <div class="form-actions">
+              <button mat-button matStepperPrevious type="button">Précédent</button>
+              <button mat-button matStepperNext type="button">Suivant</button>
+            </div>
+          </div>
+        </mat-step>
+        
+        <!-- Étape 4: Récapitulatif -->
+        <mat-step>
+          <ng-template matStepLabel>Récapitulatif</ng-template>
+          
+          <div class="form-step-content">
+            <h3>Récapitulatif de votre colis</h3>
+            
+            <div class="recap-container">
+              <div class="recap-item">
+                <div class="recap-label">Trajet:</div>
+                <div class="recap-value">
+                  {{ colisForm.get('villeDepart')?.value }} → {{ colisForm.get('villeArrivee')?.value }}
+                </div>
+              </div>
+              
+              <div class="recap-item">
+                <div class="recap-label">Dimensions:</div>
+                <div class="recap-value">
+                  {{ colisForm.get('longueur')?.value }} × {{ colisForm.get('largeur')?.value }} × {{ colisForm.get('hauteur')?.value }} cm
+                </div>
+              </div>
+              
+              <div class="recap-item">
+                <div class="recap-label">Volume:</div>
+                <div class="recap-value">{{ calculateVolume() }} cm³</div>
+              </div>
+              
+              <div class="recap-item">
+                <div class="recap-label">Poids:</div>
+                <div class="recap-value">{{ colisForm.get('nbKilo')?.value }} kg</div>
+              </div>
+              
+              <div class="recap-item">
+                <div class="recap-label">Prix proposé:</div>
+                <div class="recap-value">{{ colisForm.get('tarif')?.value }} €</div>
+              </div>
+              
+              <div class="recap-item">
+                <div class="recap-label">Description:</div>
+                <div class="recap-value">{{ colisForm.get('description')?.value }}</div>
+              </div>
+              
+              <div class="recap-item">
+                <div class="recap-label">Photo:</div>
+                <div class="recap-value">{{ selectedFile ? selectedFile.name : 'Aucune photo' }}</div>
+              </div>
+            </div>
+            
+            <div class="terms-container">
+              <mat-checkbox required>
+                J'accepte les <a href="#" class="terms-link">conditions générales</a> et je confirme que mon colis ne contient pas d'objets interdits.
+              </mat-checkbox>
+            </div>
+            
+            <div class="form-actions">
+              <button mat-button matStepperPrevious type="button">Précédent</button>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="colisForm.invalid || loading">
+                <span *ngIf="!loading">Créer mon colis</span>
+                <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
+              </button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </form>
+  </div>
+</div>

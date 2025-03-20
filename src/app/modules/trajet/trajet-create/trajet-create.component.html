@@ -1,0 +1,244 @@
+<!-- src/app/modules/trajet/trajet-create/trajet-create.component.html -->
+<div class="trajet-create-container">
+  <header class="trajet-create-header">
+    <h1>Déclarer un trajet</h1>
+    <p>Renseignez les informations de votre trajet pour transporter des colis</p>
+  </header>
+  
+  <div class="trajet-create-content">
+    <mat-card *ngIf="!currentUser" class="warning-card">
+      <mat-card-content>
+        <mat-icon>warning</mat-icon>
+        <span>Vous devez être connecté pour déclarer un trajet</span>
+        <button mat-raised-button color="primary" routerLink="/auth/login">Se connecter</button>
+      </mat-card-content>
+    </mat-card>
+    
+    <form [formGroup]="trajetForm" (ngSubmit)="onSubmit()" *ngIf="currentUser">
+      <mat-card class="trajet-card">
+        <mat-card-header>
+          <mat-card-title>Informations du trajet</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <!-- Type de déclaration -->
+          <div class="declaration-type">
+            <label class="type-label">Mode de déclaration :</label>
+            <mat-button-toggle-group [(value)]="declarationType">
+              <mat-button-toggle value="manual">Manuel</mat-button-toggle>
+              <mat-button-toggle value="vol">Par numéro de vol</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          
+          <!-- Déclaration par vol -->
+          <div *ngIf="declarationType === 'vol'" class="vol-search-section">
+            <div class="aeroport-selection">
+              <mat-form-field appearance="outline">
+                <mat-label>Aéroport de départ</mat-label>
+                <input 
+                  matInput 
+                  formControlName="aeroportDepart" 
+                  [matAutocomplete]="autoDep" 
+                  placeholder="Ex: Aéroport Paris-Charles de Gaulle" 
+                  required>
+                <mat-autocomplete #autoDep="matAutocomplete" [displayWith]="displayAeroport" (optionSelected)="onAeroportSelected('aeroportDepart', $event)">
+                  <mat-option *ngFor="let aeroport of filteredDepartureAirports | async" [value]="aeroport">
+                    {{ aeroport.aeroNom }} ({{ aeroport.idAero }}) - {{ aeroport.aeroVille }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              
+              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Aéroport d'arrivée</mat-label>
+                <input 
+                  matInput 
+                  formControlName="aeroportArrivee" 
+                  [matAutocomplete]="autoArr" 
+                  placeholder="Ex: Aéroport de Lyon-Saint Exupéry" 
+                  required>
+                <mat-autocomplete #autoArr="matAutocomplete" [displayWith]="displayAeroport" (optionSelected)="onAeroportSelected('aeroportArrivee', $event)">
+                  <mat-option *ngFor="let aeroport of filteredArrivalAirports | async" [value]="aeroport">
+                    {{ aeroport.aeroNom }} ({{ aeroport.idAero }}) - {{ aeroport.aeroVille }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            
+            <div class="search-action">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="button" 
+                (click)="searchFlights()" 
+                [disabled]="!trajetForm.get('aeroportDepart')?.value || !trajetForm.get('aeroportArrivee')?.value || searchingFlights">
+                <mat-icon>search</mat-icon>
+                Rechercher des vols
+              </button>
+            </div>
+            
+            <!-- Résultats de recherche -->
+            <div class="search-results" *ngIf="foundVols.length > 0">
+              <h3>Vols disponibles</h3>
+              
+              <mat-table [dataSource]="foundVols" class="vols-table">
+                <!-- Vol Column -->
+                <ng-container matColumnDef="vol">
+                  <mat-header-cell *matHeaderCellDef>Vol</mat-header-cell>
+                  <mat-cell *matCellDef="let vol">
+                    {{ vol.airline?.name || 'N/A' }} {{ vol.flight?.iata || vol.numVol || 'N/A' }}
+                  </mat-cell>
+                </ng-container>
+                
+                <!-- Départ Column -->
+                <ng-container matColumnDef="depart">
+                  <mat-header-cell *matHeaderCellDef>Départ</mat-header-cell>
+                  <mat-cell *matCellDef="let vol">
+                    {{ vol.departure.scheduled | date:'dd/MM/yyyy HH:mm' }}
+                  </mat-cell>
+                </ng-container>
+                
+                <!-- Arrivée Column -->
+                <ng-container matColumnDef="arrivee">
+                  <mat-header-cell *matHeaderCellDef>Arrivée</mat-header-cell>
+                  <mat-cell *matCellDef="let vol">
+                    {{ vol.arrival.scheduled | date:'dd/MM/yyyy HH:mm' }}
+                  </mat-cell>
+                </ng-container>
+                
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                  <mat-header-cell *matHeaderCellDef>Statut</mat-header-cell>
+                  <mat-cell *matCellDef="let vol">
+                    {{ vol.flight_status || 'N/A' }}
+                  </mat-cell>
+                </ng-container>
+                
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                  <mat-cell *matCellDef="let vol">
+                    <button 
+                      mat-icon-button 
+                      color="primary" 
+                      (click)="selectVol(vol)" 
+                      [disabled]="selectedVol === vol"
+                      matTooltip="Sélectionner ce vol">
+                      <mat-icon>check_circle</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                
+                <mat-header-row *matHeaderRowDef="['vol', 'depart', 'arrivee', 'status', 'action']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['vol', 'depart', 'arrivee', 'status', 'action'];" 
+                  [class.selected-row]="selectedVol === row">
+                </mat-row>
+              </mat-table>
+            </div>
+            
+            <!-- État de chargement -->
+            <div class="loading-state" *ngIf="searchingFlights">
+              <mat-spinner diameter="40"></mat-spinner>
+              <span>Recherche des vols en cours...</span>
+            </div>
+          </div>
+          
+          <!-- Saisie manuelle -->
+          <div *ngIf="declarationType === 'manual' || selectedVol">
+            <div class="form-section">
+              <h3>Informations du trajet</h3>
+              
+              <div class="form-row" *ngIf="selectedVol">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Numéro de vol</mat-label>
+                  <input matInput formControlName="idVol" readonly>
+                  <mat-icon matSuffix>flight</mat-icon>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-row" *ngIf="declarationType === 'manual'">
+                <mat-form-field appearance="outline">
+                  <mat-label>Ville de départ</mat-label>
+                  <input matInput formControlName="villeDepart" placeholder="Ex: Paris" required>
+                  <mat-error *ngIf="trajetForm.get('villeDepart')?.hasError('required')">
+                    La ville de départ est requise
+                  </mat-error>
+                </mat-form-field>
+                
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Ville d'arrivée</mat-label>
+                  <input matInput formControlName="villeArrivee" placeholder="Ex: Lyon" required>
+                  <mat-error *ngIf="trajetForm.get('villeArrivee')?.hasError('required')">
+                    La ville d'arrivée est requise
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Date de départ</mat-label>
+                  <input matInput [matDatepicker]="pickerDepart" formControlName="dateDepart" required>
+                  <mat-datepicker-toggle matSuffix [for]="pickerDepart"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDepart></mat-datepicker>
+                  <mat-error *ngIf="trajetForm.get('dateDepart')?.hasError('required')">
+                    La date de départ est requise
+                  </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Date d'arrivée</mat-label>
+                  <input matInput [matDatepicker]="pickerArrivee" formControlName="dateArrivee" required>
+                  <mat-datepicker-toggle matSuffix [for]="pickerArrivee"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerArrivee></mat-datepicker>
+                  <mat-error *ngIf="trajetForm.get('dateArrivee')?.hasError('required')">
+                    La date d'arrivée est requise
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Capacité disponible (kg)</mat-label>
+                  <input 
+                    matInput 
+                    type="number" 
+                    formControlName="nbKilo" 
+                    min="1" 
+                    max="30" 
+                    required>
+                  <span matSuffix>kg</span>
+                  <mat-error *ngIf="trajetForm.get('nbKilo')?.hasError('required')">
+                    La capacité est requise
+                  </mat-error>
+                  <mat-error *ngIf="trajetForm.get('nbKilo')?.hasError('min') || trajetForm.get('nbKilo')?.hasError('max')">
+                    La capacité doit être entre 1 et 30 kg
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div class="terms-container">
+              <mat-checkbox required>
+                J'accepte les <a href="#" class="terms-link">conditions générales</a> et je m'engage à transporter les colis qui me seront confiés dans les conditions définies par la plateforme.
+              </mat-checkbox>
+            </div>
+            
+            <div class="form-actions">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="trajetForm.invalid || loading">
+                <span *ngIf="!loading">Déclarer mon trajet</span>
+                <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</div>

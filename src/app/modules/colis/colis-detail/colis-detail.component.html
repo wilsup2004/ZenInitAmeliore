@@ -1,0 +1,182 @@
+<!-- src/app/modules/colis/colis-detail/colis-detail.component.html -->
+<div class="colis-detail-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des informations...</p>
+  </div>
+  
+  <!-- Colis details -->
+  <div *ngIf="!loading && colis" class="colis-content">
+    <div class="colis-header">
+      <div class="colis-title-section">
+        <h1>Colis #{{ colis.idColis }}</h1>
+        <div class="status-badge" [ngClass]="getStatusClass(colis.statuts.idStatut)">
+          {{ colis.statuts.libelStatut }}
+        </div>
+      </div>
+      
+      <div class="colis-actions">
+        <button *ngIf="canTakeColis" mat-raised-button color="primary" (click)="takeColis()">
+          <mat-icon>check_circle</mat-icon>
+          Prendre en charge
+        </button>
+        
+        <button *ngIf="canContactOwner" mat-raised-button color="primary" (click)="contactOwner()">
+          <mat-icon>message</mat-icon>
+          Contacter l'expéditeur
+        </button>
+        
+        <button *ngIf="canPay" mat-raised-button color="accent" (click)="goToPayment()">
+          <mat-icon>payment</mat-icon>
+          Payer
+        </button>
+        
+        <button *ngIf="canCancel" mat-raised-button color="warn" (click)="cancelPriseEnCharge()">
+          <mat-icon>cancel</mat-icon>
+          Annuler
+        </button>
+      </div>
+    </div>
+    
+    <div class="colis-details-grid">
+      <!-- Colis information -->
+      <mat-card class="colis-info-card">
+        <mat-card-header>
+          <mat-card-title>Informations générales</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="colis-info-item">
+            <div class="info-label">Expéditeur:</div>
+            <div class="info-value">{{ colis.users.prenom }} {{ colis.users.nom }}</div>
+          </div>
+          
+          <div class="colis-info-item">
+            <div class="info-label">Date de création:</div>
+            <div class="info-value">{{ colis.horodatage | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+          
+          <div class="colis-route">
+            <div class="route-city">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ colis.villeDepart }}</span>
+            </div>
+            
+            <div class="route-arrow">
+              <mat-icon>arrow_downward</mat-icon>
+            </div>
+            
+            <div class="route-city">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ colis.villeArrivee }}</span>
+            </div>
+          </div>
+          
+          <div class="colis-info-item">
+            <div class="info-label">Description:</div>
+            <div class="info-value description">{{ colis.description }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Colis dimensions -->
+      <mat-card class="colis-dimensions-card">
+        <mat-card-header>
+          <mat-card-title>Dimensions et poids</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="dimensions-grid">
+            <div class="dimension-item">
+              <div class="dimension-value">{{ colis.longueur }} cm</div>
+              <div class="dimension-label">Longueur</div>
+            </div>
+            
+            <div class="dimension-item">
+              <div class="dimension-value">{{ colis.largeur }} cm</div>
+              <div class="dimension-label">Largeur</div>
+            </div>
+            
+            <div class="dimension-item">
+              <div class="dimension-value">{{ colis.hauteur }} cm</div>
+              <div class="dimension-label">Hauteur</div>
+            </div>
+            
+            <div class="dimension-item">
+              <div class="dimension-value">{{ calculateVolume() }} cm³</div>
+              <div class="dimension-label">Volume</div>
+            </div>
+            
+            <div class="dimension-item">
+              <div class="dimension-value">{{ colis.nbKilo }} kg</div>
+              <div class="dimension-label">Poids</div>
+            </div>
+            
+            <div class="dimension-item">
+              <div class="dimension-value">{{ colis.tarif }} €</div>
+              <div class="dimension-label">Prix</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Colis image -->
+      <mat-card class="colis-image-card">
+        <mat-card-header>
+          <mat-card-title>Photo du colis</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="image-container">
+            <img *ngIf="imageUrl" [src]="imageUrl" alt="Photo du colis">
+            <div *ngIf="!imageUrl" class="no-image">
+              <mat-icon>image_not_supported</mat-icon>
+              <span>Aucune image disponible</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Prise en charge details -->
+      <mat-card *ngIf="priseEnCharge" class="prise-en-charge-card">
+        <mat-card-header>
+          <mat-card-title>Détails de la prise en charge</mat-card-title>
+          <div class="status-badge" [ngClass]="getStatusClass(priseEnCharge.statuts.idStatut)">
+            {{ priseEnCharge.statuts.libelStatut }}
+          </div>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="colis-info-item">
+            <div class="info-label">Transporteur:</div>
+            <div class="info-value">{{ priseEnCharge.users.prenom }} {{ priseEnCharge.users.nom }}</div>
+          </div>
+          
+          <div *ngIf="priseEnCharge.idVol" class="colis-info-item">
+            <div class="info-label">Vol:</div>
+            <div class="info-value">{{ priseEnCharge.idVol }}</div>
+          </div>
+          
+          <div class="colis-info-item">
+            <div class="info-label">Date de départ:</div>
+            <div class="info-value">{{ priseEnCharge.dateDepart | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+          
+          <div class="colis-info-item">
+            <div class="info-label">Date d'arrivée:</div>
+            <div class="info-value">{{ priseEnCharge.dateArrivee | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+  <!-- Error state -->
+  <div *ngIf="!loading && !colis" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Colis introuvable</h2>
+    <p>Le colis demandé n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button color="primary" routerLink="/colis">Retour à la liste des colis</button>
+  </div>
+</div>
