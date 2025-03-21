@@ -429,10 +429,25 @@ export class PaymentComponent implements OnInit, OnDestroy {
     if (this.colis) {
       this.colis.statuts = { idStatut: 2, libelStatut: 'En cours' };
       
-      this.colisService.updateColis({
-        ...this.colis,
-        file: null
-      })
+      // Créer un objet FormData pour l'envoi
+      const formData = new FormData();
+      
+      // Ajouter les données du colis au FormData
+      formData.append('idColis', this.colis.idColis.toString());
+      formData.append('statuts', JSON.stringify(this.colis.statuts));
+      
+      // Ajouter les autres propriétés importantes du colis
+      if (this.colis.longueur) formData.append('longueur', this.colis.longueur.toString());
+      if (this.colis.largeur) formData.append('largeur', this.colis.largeur.toString());
+      if (this.colis.hauteur) formData.append('hauteur', this.colis.hauteur.toString());
+      if (this.colis.nbKilo) formData.append('nbKilo', this.colis.nbKilo.toString());
+      if (this.colis.tarif) formData.append('tarif', this.colis.tarif.toString());
+      if (this.colis.villeDepart) formData.append('villeDepart', this.colis.villeDepart);
+      if (this.colis.villeArrivee) formData.append('villeArrivee', this.colis.villeArrivee);
+      if (this.colis.description) formData.append('description', this.colis.description);
+      if (this.colis.users) formData.append('users', JSON.stringify(this.colis.users));
+      
+      this.colisService.updateColis(formData)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {

@@ -33,6 +33,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SharedModule } from '../../shared/shared.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,10 @@ import { SharedModule } from '../../shared/shared.module';
     MatExpansionModule,
     MatBadgeModule,
     MatSnackBarModule,
-    SharedModule
+    SharedModule,
+    MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatMenuModule
   ]
 })
 export class ColisModule { }

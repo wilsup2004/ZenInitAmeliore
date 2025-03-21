@@ -70,7 +70,7 @@
                     color="primary"
                     (click)="promoteToAdmin(user)"
                     matTooltip="Promouvoir comme administrateur"
-                    *ngIf="user.isActive && !admins.some(a => a.user.idUser === user.idUser)">
+                    *ngIf="user.isActive && isNotAdmin(user)">
                     <mat-icon>admin_panel_settings</mat-icon>
                   </button>
                 </td>
@@ -156,7 +156,7 @@
                     color="warn"
                     (click)="removeAdmin(admin)"
                     matTooltip="Supprimer les droits d'administrateur"
-                    [disabled]="admin.user.idUser === currentUser?.idUser">
+                    [disabled]="isCurrentUser(admin)">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>
@@ -196,10 +196,10 @@
             <mat-label>Niveau d'administrateur</mat-label>
             <input matInput type="number" formControlName="adminLevel" min="1" max="3">
             <mat-hint>1: Super Admin, 2: Admin, 3: Modérateur</mat-hint>
-            <mat-error *ngIf="adminForm.get('adminLevel')?.hasError('required')">
+            <mat-error *ngIf="hasAdminLevelRequiredError()">
               Le niveau d'administrateur est requis
             </mat-error>
-            <mat-error *ngIf="adminForm.get('adminLevel')?.hasError('min') || adminForm.get('adminLevel')?.hasError('max')">
+            <mat-error *ngIf="hasAdminLevelRangeError()">
               Le niveau doit être entre 1 et 3
             </mat-error>
           </mat-form-field>

@@ -193,9 +193,18 @@ export class ColisListComponent implements OnInit {
           valueA = a.tarif;
           valueB = b.tarif;
           break;
+        case 'villeDepart':
+          valueA = a.villeDepart;
+          valueB = b.villeDepart;
+          break;
+        case 'villeArrivee':
+          valueA = a.villeArrivee;
+          valueB = b.villeArrivee;
+          break;
         default:
-          valueA = a[this.sort.field];
-          valueB = b[this.sort.field];
+          // Accès sécurisé pour les propriétés dynamiques
+          valueA = this.getPropertySafely(a, this.sort.field);
+          valueB = this.getPropertySafely(b, this.sort.field);
       }
       
       if (this.sort.direction === 'asc') {
@@ -204,6 +213,27 @@ export class ColisListComponent implements OnInit {
         return valueA < valueB ? 1 : -1;
       }
     });
+  }
+  
+  /**
+   * Récupère une propriété d'un objet de manière sécurisée
+   * @param obj L'objet sur lequel récupérer la propriété
+   * @param propertyPath Le chemin de la propriété (ex: "user.name")
+   * @returns La valeur de la propriété ou undefined si elle n'existe pas
+   */
+  getPropertySafely(obj: any, propertyPath: string): any {
+    // Gestion des propriétés imbriquées (format "user.name")
+    const props = propertyPath.split('.');
+    let result = obj;
+    
+    for (const prop of props) {
+      if (result === null || result === undefined) {
+        return undefined;
+      }
+      result = result[prop];
+    }
+    
+    return result;
   }
   
   changeTab(tab: string): void {

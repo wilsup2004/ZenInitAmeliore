@@ -101,4 +101,30 @@ export class AdminDashboardComponent implements OnInit {
     
     return statusMap[status] || status;
   }
+
+  /**
+ * Retourne l'icône correspondant au type d'action
+ * @param actionType Le type d'action
+ * @returns Le nom de l'icône Material à afficher
+ */
+getActivityIcon(actionType: string): string {
+  // Mapper les types d'actions aux icônes Material
+  const iconMap: {[key: string]: string} = {
+    'CREATE': 'add_circle',
+    'UPDATE': 'edit',
+    'DELETE': 'delete',
+    'LOGIN': 'login',
+    'LOGOUT': 'logout',
+    'PAYMENT': 'payments',
+    'ADMIN': 'admin_panel_settings',
+    'USER': 'person',
+    'COLIS': 'inventory_2',
+    'TRAJET': 'flight',
+    'MESSAGE': 'message'
+  };
+  
+  // Retourner l'icône correspondante ou une icône par défaut si le type n'est pas reconnu
+  return iconMap[actionType] || 'info';
+}
+
 }

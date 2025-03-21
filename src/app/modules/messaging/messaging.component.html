@@ -64,8 +64,8 @@
       <!-- Conversation header -->
       <div class="conversation-header">
         <div class="conversation-info">
-          <h3>{{ chatRooms.find(r => r.id === selectedRoomId)?.name }}</h3>
-          <p>{{ getOtherUser(chatRooms.find(r => r.id === selectedRoomId)!)?.name }}</p>
+          <h3>{{ getSelectedRoomName() }}</h3>
+          <p>{{ getSelectedRoomOtherUserName() }}</p>
         </div>
         
         <!-- Additional actions -->

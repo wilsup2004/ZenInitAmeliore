@@ -196,8 +196,8 @@ export class TrajetListComponent implements OnInit {
           valueB = b.villeArrivee.toLowerCase();
           break;
         default:
-          valueA = a[this.sort.field];
-          valueB = b[this.sort.field];
+          valueA = a[this.sort.field as keyof PriseEnCharge];
+          valueB = b[this.sort.field as keyof PriseEnCharge];
       }
       
       if (this.sort.direction === 'asc') {

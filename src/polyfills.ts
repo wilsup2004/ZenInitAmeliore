@@ -38,3 +38,4 @@ import 'zone.js';  // Included with Angular CLI.
 
 // SockJS polyfill for WebSocket
 (window as any).global = window;
+

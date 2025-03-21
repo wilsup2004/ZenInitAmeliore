@@ -59,7 +59,7 @@ export class ApiInterceptor implements HttpInterceptor {
               errorMessage = this.translationService.translate('errors.server');
               break;
             default:
-              errorMessage = this.translationService.translate('errors.unknown', { status: error.status });
+              errorMessage = this.translationService.translate('errors.unknown', { message: error.error.message});
               break;
           }
         }

@@ -19,4 +19,6 @@ export interface User {
   mail: string;
   password: string;
   usersProfils: UserProfile[];
+  // Ajout de la propriété qui manque
+  isActive: boolean;
 }

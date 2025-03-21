@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
+import { PaymentService } from '../../../core/services/payment.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Payment } from '../../../core/models/payment.model';
 import { User } from '../../../core/models/user.model';
@@ -82,7 +83,8 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private adminService: AdminService,
-    private authService: AuthService
+    private authService: AuthService,
+    private paymentService: PaymentService
   ) {
     this.filterForm = this.fb.group({
       status: [null],
@@ -153,7 +155,7 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
                 case 'paymentMethod.methodName':
                   return item.paymentMethod?.methodName;
                 default:
-                  return item[property as keyof Payment];
+                  return item.paymentMethod?.methodName;
               }
             };
             
@@ -186,16 +188,16 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
   
   loadPaymentMethods(): void {
     // Récupérer les méthodes de paiement
-    this.adminService.getPaymentMethods()
+    this.paymentService.getPaymentMethods()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (methods) => {
+        next: (methods: any) => {
           this.paymentMethods = [
             { idMethod: null, methodName: 'Toutes les méthodes' },
             ...methods
           ];
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Erreur lors du chargement des méthodes de paiement:', error);
         }
       });
@@ -443,12 +445,12 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
         </div>
         <div class="detail-row">
           <span class="detail-label">Date:</span>
-          <span class="detail-value">{{data.paymentDate | date:'dd/MM/yyyy HH:mm'}}</span>
+          <span class="detail-value">{{formatDate(data.paymentDate)}}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Statut:</span>
           <span class="detail-value">
-            <span class="status-badge" [ngClass]="getStatusClass(data.paymentStatus)">{{data.paymentStatus}}</span>
+            <span class="status-badge" [class]="getStatusClass(data.paymentStatus)">{{data.paymentStatus}}</span>
           </span>
         </div>
         <div class="detail-row">
@@ -465,7 +467,7 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
         </div>
       </div>
 
-      <mat-divider></mat-divider>
+      <hr class="divider">
 
       <div class="payment-detail-section">
         <h3>Utilisateur</h3>
@@ -483,7 +485,7 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
         </div>
       </div>
 
-      <mat-divider></mat-divider>
+      <hr class="divider">
 
       <div class="payment-detail-section">
         <h3>Colis</h3>
@@ -501,7 +503,7 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
         </div>
       </div>
 
-      <mat-divider></mat-divider>
+      <hr class="divider">
 
       <div class="payment-detail-section">
         <h3>Détails additionnels</h3>
@@ -582,8 +584,10 @@ export class PaymentManagementComponent implements OnInit, OnDestroy {
       font-size: 0.85rem;
     }
 
-    mat-divider {
+    .divider {
       margin: 16px 0;
+      border: none;
+      border-top: 1px solid #ddd;
     }
   `]
 })
@@ -605,5 +609,11 @@ export class PaymentDetailsDialogComponent {
       default:
         return '';
     }
+  }
+
+  formatDate(date: Date | string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
   }
 }

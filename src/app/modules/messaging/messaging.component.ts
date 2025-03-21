@@ -165,7 +165,7 @@ export class MessagingComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
           
           // Charger le dernier message
-          this.chatService.getChatHistory(roomId)
+          this.chatService.getMessageHistory(roomId)
             .subscribe({
               next: (messages) => {
                 if (messages.length > 0) {
@@ -267,7 +267,7 @@ export class MessagingComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.messages = [];
     
     // Charger l'historique des messages
-    this.chatService.getChatHistory(roomId)
+    this.chatService.getMessageHistory(roomId)
       .pipe(finalize(() => {
         this.loadingMessages = false;
       }))
@@ -402,4 +402,28 @@ export class MessagingComponent implements OnInit, OnDestroy, AfterViewChecked {
     return messageDate.toLocaleDateString() + 
       ' ' + messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
+
+  /**
+ * Récupère le nom de la salle de chat sélectionnée
+ */
+getSelectedRoomName(): string {
+  if (!this.selectedRoomId) return '';
+  
+  const room = this.chatRooms.find(r => r.id === this.selectedRoomId);
+  return room?.name || '';
+}
+
+/**
+ * Récupère le nom de l'autre utilisateur dans la salle de chat sélectionnée
+ */
+getSelectedRoomOtherUserName(): string {
+  if (!this.selectedRoomId) return '';
+  
+  const room = this.chatRooms.find(r => r.id === this.selectedRoomId);
+  if (!room) return '';
+  
+  const otherUser = this.getOtherUser(room);
+  return otherUser?.name || '';
+}
+
 }

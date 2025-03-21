@@ -10,7 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ThemeSelectorComponent } from './components/theme-selector/theme-selector.component';
-import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+//import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
 
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -31,8 +31,7 @@ import { SharedModule } from '../../shared/shared.module';
     HeaderComponent,
     SidenavComponent,
     FooterComponent,
-    ThemeSelectorComponent,
-    LanguageSelectorComponent
+    ThemeSelectorComponent
   ],
   imports: [
     CommonModule,

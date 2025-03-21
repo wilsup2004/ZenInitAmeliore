@@ -111,7 +111,7 @@ export class ColisManagementComponent implements OnInit {
                 case 'statut':
                   return item.statuts.libelStatut;
                 default:
-                  return item[property];
+                  return item.statuts.libelStatut;
               }
             };
             

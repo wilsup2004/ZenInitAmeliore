@@ -89,7 +89,8 @@ export class RegisterComponent implements OnInit {
         },
         dateInit: new Date(),
         note: 0
-      }]
+      }],
+      isActive:false
     };
 
     this.authService.register(user)

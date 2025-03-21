@@ -22,6 +22,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { SharedModule } from '../../shared/shared.module';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -45,7 +48,10 @@ import { SharedModule } from '../../shared/shared.module';
     MatSnackBarModule,
     MatDividerModule,
     MatSelectModule,
-    SharedModule
+    SharedModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ]
 })
 export class AuthModule { }

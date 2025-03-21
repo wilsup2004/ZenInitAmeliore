@@ -109,9 +109,21 @@
                 [legend]="true"
                 [labels]="true"
                 [doughnut]="true"
-                [scheme]="'cool'"
-                [legendPosition]="'below'">
+                [scheme]="'cool'" >
               </ngx-charts-pie-chart>
+              
+               <!-- 
+               <ngx-charts-pie-chart
+                [results]="colisStats"
+                [gradient]="true"
+                [legend]="true"
+                [labels]="true"
+                [doughnut]="true"
+                [scheme]="'cool'" 
+                legendPosition='right' >
+              </ngx-charts-pie-chart>
+              
+              -->
             </div>
             <div *ngIf="colisStats.length === 0" class="no-data-message">
               Aucune donnée disponible

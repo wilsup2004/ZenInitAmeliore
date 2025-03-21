@@ -1,3 +1,6 @@
+import { PriseEnCharge } from "./prise-en-charge.model";
+import { User } from "./user.model";
+
 // src/app/core/models/colis.model.ts
 export interface Statut {
   idStatut: number;

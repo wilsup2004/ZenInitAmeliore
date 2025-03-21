@@ -1,3 +1,7 @@
+import { Colis } from "./colis.model";
+import { PriseEnCharge } from "./prise-en-charge.model";
+import { User } from "./user.model";
+
 // src/app/core/models/payment.model.ts
 export interface PaymentMethod {
   idMethod: number;

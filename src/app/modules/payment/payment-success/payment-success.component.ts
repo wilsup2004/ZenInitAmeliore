@@ -144,10 +144,22 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
         next: (colis) => {
           colis.statuts = { idStatut: 2, libelStatut: 'En cours' };
           
-          this.colisService.updateColis({
-            ...colis,
-            file: null
-          })
+          // Créer un objet FormData pour l'envoi
+          const formData = new FormData();
+          
+          // Ajouter les données du colis au FormData
+          formData.append('idColis', colis.idColis.toString());
+          formData.append('statuts', JSON.stringify(colis.statuts));
+          formData.append('longueur', colis.longueur.toString());
+          formData.append('largeur', colis.largeur.toString());
+          formData.append('hauteur', colis.hauteur.toString());
+          formData.append('nbKilo', colis.nbKilo.toString());
+          formData.append('tarif', colis.tarif.toString());
+          formData.append('villeDepart', colis.villeDepart);
+          formData.append('villeArrivee', colis.villeArrivee);
+          formData.append('description', colis.description);
+          
+          this.colisService.updateColis(formData)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: () => {

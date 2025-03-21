@@ -45,7 +45,7 @@ export class PriseEnChargeService {
   }
 
   // Créer une prise en charge
-  createPriseEnCharge(priseEnCharge: PriseEnCharge): Observable<any> {
+  createPriseEnCharge(priseEnCharge: Partial<PriseEnCharge>): Observable<any> {
     return this.http.post(this.apiUrl, priseEnCharge);
   }
 

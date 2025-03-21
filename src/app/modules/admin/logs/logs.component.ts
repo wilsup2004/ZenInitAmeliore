@@ -80,7 +80,7 @@ export class LogsComponent implements OnInit {
                 case 'adminUser.user.nom':
                   return item.adminUser.user.nom + ' ' + item.adminUser.user.prenom;
                 default:
-                  return item[property];
+                  return item.actionType;
               }
             };
           });

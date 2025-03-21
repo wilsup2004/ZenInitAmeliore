@@ -356,4 +356,35 @@ export class UserManagementComponent implements OnInit {
       adminLevel: 2
     });
   }
+
+
+  /**
+ * Vérifie si un utilisateur n'est pas déjà administrateur
+ */
+isNotAdmin(user: User): boolean {
+  return !this.admins.some(admin => admin.user.idUser === user.idUser);
+}
+
+/**
+ * Vérifie si l'administrateur est l'utilisateur courant
+ */
+isCurrentUser(admin: AdminUser): boolean {
+  return admin.user.idUser === this.currentUser?.idUser;
+}
+
+/**
+ * Vérifie si le champ adminLevel a une erreur de type required
+ */
+hasAdminLevelRequiredError(): boolean {
+  return this.adminForm.get('adminLevel')?.hasError('required') || false;
+}
+
+/**
+ * Vérifie si le champ adminLevel a une erreur de type min ou max
+ */
+hasAdminLevelRangeError(): boolean {
+  const adminLevelControl = this.adminForm.get('adminLevel');
+  return (adminLevelControl?.hasError('min') || adminLevelControl?.hasError('max')) || false;
+}
+
 }

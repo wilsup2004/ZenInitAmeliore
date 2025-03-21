@@ -38,6 +38,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModule } from '../../shared/shared.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { SharedModule } from '../../shared/shared.module';
     MatMenuModule,
     MatTooltipModule,
     MatButtonToggleModule,
-    SharedModule
+    SharedModule,
+    MatCheckboxModule
   ]
 })
 export class TrajetModule { }

@@ -1,32 +1,42 @@
 // src/app/core/services/chat.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Message } from '../models/message.model';
 import { environment } from '../../../environments/environment';
 import * as SockJS from 'sockjs-client';
-import * as Stomp from 'stompjs';
+import { Client } from '@stomp/stompjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private apiUrl = `${environment.apiUrl}/chat`;
-  private stompClient: any;
-  private socket: any;
+  private stompClient: Client | null = null;
 
   constructor(private http: HttpClient) {}
 
   // Initialiser la connexion WebSocket
   initializeWebSocketConnection(userId: string): void {
-    this.socket = new SockJS(`${environment.apiUrl}/ws`);
-    this.stompClient = Stomp.over(this.socket);
-    
-    this.stompClient.connect({}, () => {
+    // Créer une nouvelle instance de Client
+    this.stompClient = new Client({
+      webSocketFactory: () => new SockJS(`${environment.apiUrl}/ws`),
+      debug: function(str) {
+        console.log('STOMP: ' + str);
+      },
+      reconnectDelay: 5000, // Tentative de reconnexion après 5 secondes
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000
+    });
+
+    // Définir le callback de connexion
+    this.stompClient.onConnect = (frame) => {
+      console.log('Connected: ' + frame);
+      
       // S'abonner au canal des messages pour chaque conversation active
       this.getActiveConversations(userId).subscribe(roomIds => {
         roomIds.forEach(roomId => {
-          this.stompClient.subscribe(`/topic/chat/${roomId}`, (message: any) => {
+          this.stompClient?.subscribe(`/topic/chat/${roomId}`, (message) => {
             // Traiter le message reçu
             const messageBody = JSON.parse(message.body);
             console.log('Message reçu:', messageBody);
@@ -35,34 +45,42 @@ export class ChatService {
       });
 
       // S'abonner au canal des notifications
-      this.stompClient.subscribe(`/user/${userId}/queue/notifications`, (notification: any) => {
+      this.stompClient?.subscribe(`/user/${userId}/queue/notifications`, (notification) => {
         // Traiter la notification reçue
         const notificationBody = JSON.parse(notification.body);
         console.log('Notification reçue:', notificationBody);
       });
-    });
+    };
+
+    // Gérer les erreurs de connexion
+    this.stompClient.onStompError = (frame) => {
+      console.error('Broker reported error: ' + frame.headers['message']);
+      console.error('Additional details: ' + frame.body);
+    };
+
+    // Démarrer la connexion
+    this.stompClient.activate();
   }
 
   // Fermer la connexion WebSocket
   disconnect(): void {
     if (this.stompClient) {
-      this.stompClient.disconnect();
+      this.stompClient.deactivate();
+      this.stompClient = null;
     }
   }
 
   // Envoyer un message
   sendMessage(message: Message): Observable<any> {
     if (this.stompClient && this.stompClient.connected) {
-      this.stompClient.send(`/app/chat/${message.idPrise}`, {}, JSON.stringify(message));
-      return new Observable(observer => {
-        observer.next({ success: true });
-        observer.complete();
+      this.stompClient.publish({
+        destination: `/app/chat/${message.idPrise}`,
+        body: JSON.stringify(message)
       });
+      return of({ success: true });
     } else {
-      return new Observable(observer => {
-        observer.error('WebSocket non connecté');
-        observer.complete();
-      });
+      console.error('WebSocket non connecté');
+      return of({ success: false, error: 'WebSocket non connecté' });
     }
   }
 
@@ -100,4 +118,3 @@ export class ChatService {
     return this.http.post(`${this.apiUrl}/notify/${userId}`, message);
   }
 }
-  

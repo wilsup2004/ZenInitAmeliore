@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 // src/app/core/models/admin.model.ts
 export interface AdminUser {
   idAdmin: number;

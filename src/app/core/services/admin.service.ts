@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AdminUser, AdminLog } from '../models/admin.model';
-import { User, Colis, Payment } from '../models/';
+import { User, Colis, Payment, PaymentMethod } from '../models/';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -40,17 +40,17 @@ export class AdminService {
   }
 
   // Mettre à jour le niveau d'un administrateur
-  updateAdminLevel(adminId: number, newLevel: number, adminActionId: number): Observable<AdminUser> {
+  updateAdminLevel(adminId: number, newLevel: number, adminActionId: string): Observable<AdminUser> {
     const params = new HttpParams()
       .set('newLevel', newLevel.toString())
-      .set('adminActionId', adminActionId.toString());
+      .set('adminActionId', adminActionId);
     
     return this.http.put<AdminUser>(`${this.apiUrl}/users/${adminId}`, null, { params });
   }
 
   // Supprimer un administrateur
-  removeAdmin(adminId: number, adminActionId: number): Observable<any> {
-    const params = new HttpParams().set('adminActionId', adminActionId.toString());
+  removeAdmin(adminId: number, adminActionId: string): Observable<any> {
+    const params = new HttpParams().set('adminActionId', adminActionId);
     
     return this.http.delete(`${this.apiUrl}/users/${adminId}`, { params });
   }
@@ -104,15 +104,15 @@ export class AdminService {
   }
 
   // Désactiver un utilisateur
-  disableUser(userId: string, adminId: number): Observable<any> {
-    const params = new HttpParams().set('adminId', adminId.toString());
+  disableUser(userId: string, adminId: string): Observable<any> {
+    const params = new HttpParams().set('adminId', adminId);
     
     return this.http.put(`${this.apiUrl}/manage/users/${userId}/disable`, null, { params });
   }
 
   // Activer un utilisateur
-  enableUser(userId: string, adminId: number): Observable<any> {
-    const params = new HttpParams().set('adminId', adminId.toString());
+  enableUser(userId: string, adminId: string): Observable<any> {
+    const params = new HttpParams().set('adminId', adminId);
     
     return this.http.put(`${this.apiUrl}/manage/users/${userId}/enable`, null, { params });
   }
@@ -130,7 +130,11 @@ export class AdminService {
     
     return this.http.put<Colis>(`${this.apiUrl}/manage/colis/${colisId}/status`, null, { params });
   }
-
+/*
+  getPaymentMethods(): Observable<PaymentMethod[]> {
+    return this.http.get<PaymentMethod[]>(`${this.apiUrl}/payment/`);
+  }
+*/
   // Récupérer tous les paiements
   getAllPayments(): Observable<Payment[]> {
     return this.http.get<Payment[]>(`${this.apiUrl}/manage/payments`);
