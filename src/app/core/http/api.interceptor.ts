@@ -1,5 +1,5 @@
 // src/app/core/http/api.interceptor.ts
-import { Injectable } from '@angular/core';
+import { Injectable,Injector  } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -15,11 +15,21 @@ import { TranslationService } from '../services/translation.service';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
+
+  private _translationService!: TranslationService;
+
   constructor(
     private snackBar: MatSnackBar,
     private loadingService: LoadingService,
-    private translationService: TranslationService
+    private injector: Injector
   ) {}
+
+  private get translationService(): TranslationService {
+    if (!this._translationService) {
+      this._translationService = this.injector.get(TranslationService);
+    }
+    return this._translationService;
+  }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Incrémenter le compteur de requêtes en cours
